@@ -1,0 +1,59 @@
+startup_message off
+
+set bgcolor black
+set fgcolor green
+set fwcolor green
+set bwcolor red
+set border  0
+set inputwidth 500
+set font terminus
+#set font aqui.se
+set barpadding 0 0
+set winname title
+set winfmt %t
+
+alias dmenu execa dmenu_run -nb \#222 -nf \#888 -sb  \#00ff00 -sf \#000000
+alias selectwin execa ratpoison -c "select `ratpoison -c windows | dmenu -nb \#222 -nf \#888 -sb  \#00ff00 -sf \#000000 | awk '{print $1}'`"
+alias terminal exec urxvt
+alias batt exec ratpoison -c "echo `acpi -b`"
+alias temp exec ratpoison -c "echo temperature: `awk '{print $2 $3}' /proc/acpi/thermal_zone/TZ00/temperature` "
+alias flashplayer exec /home/gall0ws/flashplayer.sh
+alias border_on set border 1
+alias border_off set border 0
+alias cal exec ratpoison -c "echo `cal`"
+alias date exec ratpoison -c "echo `date`"
+alias uni_proxy_enable setenv http_proxy http://math.unipa.it:3128
+alias uni_proxy_disable unsetenv http_proxy
+alias lock exec xlock
+
+unbind apostrophe
+unbind C-apostrophe
+unbind C-u
+unbind C-x
+unbind C-K
+unbind C-Return
+unbind C-a
+unbind C-c
+unbind C-i
+unbind C-k
+unbind C-l
+unbind C-m
+unbind C-p
+unbind C-v
+unbind C-V
+unbind C-w
+unbind C-s
+unbind C-r
+unbind C-n
+
+bind d date
+bind period dmenu
+bind c terminal
+bind C-exclam colon exec urxvt -e 
+bind b batt
+bind comma select
+bind f flashplayer
+bind w selectwin
+bind bracketleft border_on
+bind bracketright border_off
+bind L lock
