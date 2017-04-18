@@ -1,5 +1,6 @@
 Rxvt.background:	#000
 Rxvt.foreground:	#fff
 Rxvt.cursorColor:	#fff
-Rxvt.font:			-*-terminus-*-*-*-*-*-140-*-*-*-*-*-*
+Rxvt.font:		-*-terminus-*-*-*-*-*-120-*-*-*-*-*-*
 Rxvt.scrollBar:		false
+Rxvt.fading:		15
