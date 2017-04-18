@@ -1,36 +1,66 @@
-## In order to load this: echo 'export ENV=$HOME/lib/kshrc' >> $HOME/.profile
-
 [ -z "$PS1" ] && return
+[ "$0" == "sh" ] && return
 
 ## options
 set -o emacs
-bind ^I=complete-list
+bind ^L=clear-screen
+
+## locale
+LANG=en_US.UTF-8
+LC_ALL=en_US.UTF-8
+export LANG LC_ALL
 
 ## variables
 PATH=.:$HOME/bin:/bin:/usr/bin:/usr/local/bin:/sbin:/usr/sbin:/usr/local/sbin:/usr/games
-EDITOR=E
+GOPATH=~/go
+EDITOR=mg
 FCEDIT=$EDITOR
 HOSTNAME=`hostname`
 PAGER=less
 MANPAGER=$PAGER
-export EDITOR FCEDIT PATH PAGER MANPAGER
-PS1='$ '
+export PATH GOPATH EDITOR FCEDIT HOSTNAME PAGER MANPAGER
+
+PS1='% '
 PS2=
 
+# mouse friendly prompt:
+%() {
+	"$@"
+}
+
+# root prompt:
+test "$(id -u)"x == "0"x  && PS1='# '
+
 ## aliases
-alias lc='lc -F'
+alias ls='/bin/ls -F -c1'
+alias lc='/bin/ls -F'
 alias unmount=umount
 alias j='jobs -l'
+alias vi=nvi
+alias rxvt=urxvtc
+alias emacs="emacsclient -t -a=''"
 
 ## p9p environment
-PLAN9=/opt/plan9
+PLAN9=/usr/local/plan9
 export PLAN9
 PATH=$PATH:$PLAN9/bin
+
+## ccache
+test x"$(id -u)" == x"0" && {
+	PATH=/usr/local/libexec/ccache:$PATH
+	CCACHE_PATH=/usr/bin:/usr/local/bin
+	CCACHE_DIR=/var/ccache
+	export PATH CCACHE_PATH CCACHE_DIR
+}
 
 ## go stuff
 GOPATH=$HOME/go
 PATH=$PATH:$GOPATH/bin
 export GOPATH PATH
+
+## npm stuff
+NPM_CONFIG_PREFIX=~/npm-g
+PATH=$PATH:$NPM_CONFIG_PREFIX/bin
 
 ## machine specific options
 case $HOSTNAME in
@@ -47,7 +77,7 @@ macao*)
 	alias octave=/Applications/Octave.app/Contents/Resources/bin/octave
 	;;
 
-5620z)
+5620z.local)
 	GOROOT=/usr/lib/go
 	INFERNO=$HOME/inferno
 	ANDROID=$HOME/android-sdk-linux
@@ -69,35 +99,51 @@ macao*)
 	}
 	
 	;;
+
+banana2.local)
+	if [ "`uname`" == "FreeBSD" ]; then
+	
+		for i in \
+			zzz\
+			freq\
+			shutdown\
+		; do
+		alias $i="sudo $i"
+	done
+	
+		cdports() {
+			  test ! -z "$1" && __dir=$1
+			  cd /usr/ports/${__dir}
+		}
+		rdsysctl() {
+			/sbin/sysctl $1 | cut -d: -f2-
+		}
+		temp() {
+			n=$1
+			test -z "$n" && n=0
+			rdsysctl hw.acpi.thermal.tz$n.temperature
+		}
+	fi
 esac
 
 ## terminal specific options
 case "$TERM" in
-xterm)
-	;;
+dumb)
+	if [ "$termprog" == "9term" ] || [ "$termprog" == "win" ]; then
+		## pagers are for sissies:
+		export PAGER=cat
+		export MANPAGER=nobs
 	
-rxvt*)
-	TERM=linux
-	;;
-
-9term)
-	## pagers are for sissies:
-	export PAGER=cat
-	export MANPAGER=nobs
-	
-	## misc:
-	set +o emacs
-	set +o vi
-	PS1='⇛ '
-	alias ⇛=
-	alias ls='9 ls'
-	alias bc='9 bc'
-	alias wc='9 wc'
+		## misc:
+		set +o emacs
+		set +o vi
+	fi
 	;;
 
 *)
 	alias awd=	
 	;;
+
 esac
 
 flash() {
@@ -113,8 +159,9 @@ cd() {
 	awd
 }
 
-test "$USER" == "root"  && PS1='# '
-
+mon() {
+      tail -F /var/log/messages /var/log/.${DISPLAY:-0.log}
+}
 export PATH
 
 awd 
