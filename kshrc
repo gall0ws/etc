@@ -20,20 +20,22 @@ PAGER=less
 MANPAGER=$PAGER
 export PATH GOPATH EDITOR FCEDIT HOSTNAME PAGER MANPAGER
 
-PS1='% '
+## prompt
+sym='%'
+test "$(id -u)"x == "0"x && sym='#'
+
+PS1="$sym "
 PS2=
+
+test ! -z "$SSH_CONNECTION" || test ! -z "$NETPROMPT" && PS1="${HOSTNAME}${sym} "
 
 # mouse friendly prompt:
 %() {
 	"$@"
 }
 
-# root prompt:
-test "$(id -u)"x == "0"x  && PS1='# '
-
 ## aliases
-alias ls='/bin/ls -F -c1'
-alias lc='/bin/ls -F'
+alias ls='ls -F'
 alias unmount=umount
 alias j='jobs -l'
 alias vi=nvi
@@ -145,14 +147,6 @@ dumb)
 	;;
 
 esac
-
-flash() {
-	lsof +L1 \
-		|awk '/Flash/ {
-			sub(/.$/, "", $4); # trim access mode
-			printf "/proc/%d/fd/%d\n", $2, $4
-		}'
-}
 
 cd() {
 	builtin cd "$@"
