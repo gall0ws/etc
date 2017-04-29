@@ -1,0 +1,2 @@
+"xdotool key --clearmodifiers XF86Launch0"
+	release+Mod4+space
