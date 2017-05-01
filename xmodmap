@@ -1,6 +1,6 @@
 case "$HOSTNAME" in
 
-banana2)
+banana2.local)
 	xmodmap -e "keycode 244 = XF86Launch0"
 	xmodmap -e "keycode 95 = XF86LaunchF"
 	xmodmap -e "keycode 238 = XF86Terminal"
