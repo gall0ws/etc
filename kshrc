@@ -27,12 +27,16 @@ test "$(id -u)"x == "0"x && sym='#'
 PS1="$sym "
 PS2=
 
-test ! -z "$SSH_CONNECTION" || test ! -z "$NETPROMPT" && PS1="${HOSTNAME}${sym} "
-
 # mouse friendly prompt:
 %() {
 	"$@"
 }
+
+netprompt() {
+	PS1="${HOSTNAME}${sym} "
+}
+
+test ! -z "$SSH_CONNECTION" || test ! -z "$NETPROMPT" && netprompt
 
 ## aliases
 alias ls='ls -F'
