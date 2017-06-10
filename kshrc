@@ -45,6 +45,7 @@ alias j='jobs -l'
 alias vi=nvi
 alias rxvt=urxvtc
 alias emacs="emacsclient -t -a=''"
+alias mpv_mono='mpv --af=pan=1:[0.5,0.5]'
 
 ## p9p environment
 PLAN9=/usr/local/plan9
