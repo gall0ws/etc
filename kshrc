@@ -11,12 +11,13 @@ LC_ALL=en_US.UTF-8
 export LANG LC_ALL
 
 ## variables
+HISTFILE=~/.mksh_history
 PATH=.:$HOME/bin:/bin:/usr/bin:/usr/local/bin:/sbin:/usr/sbin:/usr/local/sbin:/usr/games
 GOPATH=~/go
 EDITOR=mg
 FCEDIT=$EDITOR
 HOSTNAME=`hostname`
-PAGER=less
+PAGER='less -r'
 MANPAGER=$PAGER
 export PATH GOPATH EDITOR FCEDIT HOSTNAME PAGER MANPAGER
 
@@ -107,6 +108,17 @@ macao*)
 	
 	;;
 
+hpi5)
+	for i in \
+	    go		\
+	    openjdk		\
+	    node	\
+	    plan9port	\
+	    vbox	\
+	    ; do . /etc/profile.d/${i}.sh
+	done
+	;;
+
 banana2.local)
 	if [ "`uname`" == "FreeBSD" ]; then
 	
@@ -128,6 +140,7 @@ banana2.local)
 		temp() {
 			n=$1
 			test -z "$n" && n=0
+
 			rdsysctl hw.acpi.thermal.tz$n.temperature
 		}
 	fi
@@ -145,8 +158,14 @@ dumb)
 		set +o emacs
 		set +o vi
 	fi
-	;;
 
+	if [ ! -z "$EMACS" ]; then
+	   alias awd=
+	   alias git='git --no-pager'
+	fi
+	;;
+rxvt*)
+	;;
 *)
 	alias awd=	
 	;;
@@ -159,7 +178,7 @@ cd() {
 }
 
 mon() {
-      tail -F /var/log/messages /var/log/.${DISPLAY:-0.log}
+      tail -F /var/log/messages
 }
 export PATH
 
