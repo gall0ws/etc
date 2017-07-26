@@ -1,3 +1,5 @@
+## -*- sh -*-
+
 [ -z "$PS1" ] && return
 [ "$0" == "sh" ] && return
 
@@ -11,7 +13,6 @@ LC_ALL=en_US.UTF-8
 export LANG LC_ALL
 
 ## variables
-HISTFILE=~/.mksh_history
 PATH=.:$HOME/bin:/bin:/usr/bin:/usr/local/bin:/sbin:/usr/sbin:/usr/local/sbin:/usr/games
 GOPATH=~/go
 EDITOR=mg
@@ -47,7 +48,7 @@ alias unmount=umount
 alias j='jobs -l'
 alias vi=nvi
 alias rxvt=urxvtc
-alias emacs="emacsclient -t -a=''"
+alias emacs="emacsclient"
 alias mpv_mono='mpv --af=pan=1:[0.5,0.5]'
 
 ## p9p environment
@@ -71,6 +72,20 @@ export GOPATH PATH
 ## npm stuff
 NPM_CONFIG_PREFIX=~/npm-g
 PATH=$PATH:$NPM_CONFIG_PREFIX/bin
+
+# functions
+mon() {
+      tail -F /var/log/messages
+}
+
+hist_on() {
+    HISTFILE=~/.mksh_history
+    export HISTFILE
+}
+
+hist_off() {
+    unset HISTFILE
+}
 
 ## machine specific options
 case $HOSTNAME in
@@ -113,7 +128,7 @@ macao*)
 hpi5)
 	for i in \
 	    go		\
-	    openjdk		\
+	    jdk		\
 	    node	\
 	    plan9port	\
 	    vbox	\
@@ -178,10 +193,5 @@ cd() {
 	builtin cd "$@"
 	awd
 }
-
-mon() {
-      tail -F /var/log/messages
-}
-export PATH
 
 awd 
