@@ -30,11 +30,21 @@
 	additional-modes)
 
 ;; hooks:
-(add-hook 'js-mode-hook
-	  (lambda ()
-	    (defun js-indent-level (lvl)
-	      (interactive "nlevel: ")
-	      (setq js-indent-level lvl))))
+(setq my-hooks
+      (list ;; (hook . function) ...
+       (cons 'js-mode-hook
+	     (lambda ()
+	       (defun js-indent-level (lvl)
+		 (interactive "nlevel: ")
+		 (setq js-indent-level lvl))))
+       (cons 'term-mode-hook
+	     (lambda ()
+	       (setq buffer-face-mode-face '(:family "terminus" :height 10))
+	       (buffer-face-mode)))))
+
+(mapcar (lambda (hook)
+	  (add-hook (car hook) (cdr hook)))
+	my-hooks)
 
 ;; I don't like widgets:
 (menu-bar-mode -1)
