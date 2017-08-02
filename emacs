@@ -4,16 +4,16 @@
 (global-set-key (kbd "<f1>") 'man)
 (global-set-key (kbd "<f5>") 'compile)
 (global-set-key (kbd "M-g") 'goto-line)
+(global-set-key (kbd "C-h") 'backward-delete-char-untabify)
 (global-set-key (kbd "C-x M-a") 'acme-mouse-mode) ;; defined below
 
-;; backups:
-(setq make-backup-files t
-      backup-by-copying t
-      backup-directory-alist '(("." . "~/.emacs-backup"))
-      version-control t
-      kept-new-versions 2
-      kept-old-versions 5
-      delete-old-versions t)
+;; frame default settings:
+(setq default-frame-alist
+      (list
+       '(font . "terminus-9")
+       '(background-color . "#222222")
+       '(foreground-color . "#EFEFEF")
+       '(vertical-scroll-bars . nil)))
 
 ;; additional modes:
 (setq additional-modes
@@ -43,14 +43,19 @@
 	  (add-hook (car hook) (cdr hook)))
 	my-hooks)
 
+;; backups:
+(setq make-backup-files t
+      backup-by-copying t
+      backup-directory-alist '(("." . "~/.emacs-backup"))
+      version-control t
+      kept-new-versions 2
+      kept-old-versions 5
+      delete-old-versions t)
+
 ;; misc:
 (menu-bar-mode -1)
 (tool-bar-mode -1)
-(scroll-bar-mode -1)
 (blink-cursor-mode -1)
-(set-background-color "#222222")
-(set-foreground-color "#EFEFEF")
-(set-default-font "terminus-9")
 (windmove-default-keybindings 'shift)
 (put 'dired-find-alternate-file 'disabled nil)
 
