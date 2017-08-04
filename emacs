@@ -1,7 +1,7 @@
 ;; hey emacs, this is your -*- lisp -*- configuration file!
 
 ;; global keys:
-(global-set-key (kbd "<f1>") 'man)
+(global-set-key (kbd "<f1>") 'woman)
 (global-set-key (kbd "<f5>") 'compile)
 (global-set-key (kbd "M-g") 'goto-line)
 (global-set-key (kbd "C-h") 'backward-delete-char-untabify)
@@ -15,29 +15,34 @@
        '(foreground-color . "#EFEFEF")
        '(vertical-scroll-bars . nil)))
 
+(setq initial-frame-alist default-frame-alist)
+
 ;; additional modes:
 (setq additional-modes
       (list ;; (path . load-function) ...
-       (cons "/home/gall0ws/src/emacs/go-mode" (lambda() (require 'go-mode-autoloads)))
-       (cons "/home/gall0ws/src/emacs/acme-mouse" (lambda()
-						    (require 'acme-mouse)
-						    (define-global-minor-mode acme-global-mouse-mode
-						      acme-mouse-mode
-						      (lambda() (acme-mouse-mode t)))
-						    (acme-global-mouse-mode)))))
+       '("~/src/emacs/go-mode" . (lambda() (require 'go-mode-autoloads)))
+       '("~/src/emacs/acme-mouse" . (lambda()
+				      (require 'acme-mouse)
+				      (define-global-minor-mode acme-global-mouse-mode
+					acme-mouse-mode
+					(lambda() (acme-mouse-mode t)))
+				      (acme-global-mouse-mode)))))
 (mapcar (lambda (mode)
 	  (push (car mode) load-path)
 	  (funcall (cdr mode)))
 	additional-modes)
 
+;; autoloads
+(autoload 'woman "Browse man pages." t)
+
 ;; hooks:
 (setq my-hooks
       (list ;; (hook . function) ...
-       (cons 'js-mode-hook
-	     (lambda ()
-	       (defun js-indent-level (lvl)
-		 (interactive "nlevel: ")
-		 (setq-local js-indent-level lvl))))))
+       '(js-mode-hook . (lambda ()
+			  (infer-indentation-style)
+			  (defun set-js-indent-level (lvl)
+			    (interactive "nlevel: ")
+			    (setq-local js-indent-level lvl))))))
 
 (mapcar (lambda (hook)
 	  (add-hook (car hook) (cdr hook)))
@@ -99,6 +104,7 @@
  '(inhibit-startup-screen t)
  '(js-indent-level 2)
  '(line-spacing 2)
+ '(mouse-autoselect-window t)
  '(next-line-add-newlines nil)
  '(objc-font-lock-extra-types nil)
  '(query-replace-highlight t)
@@ -118,6 +124,11 @@
  '(compilation-warning ((((class color)) (:foreground "steelblue1" :weight bold))))
  '(cursor ((t (:background "white"))))
  '(custom-button ((((type x w32 mac) (class color)) (:background "black" :foreground "yellowgreen" :box (:line-width 2 :color "black" :style released-button)))))
+ '(diff-added ((t (:inherit diff-changed :foreground "green"))))
+ '(diff-removed ((t (:inherit diff-changed :foreground "red"))))
+ '(dired-directory ((t (:inherit font-lock-function-name-face :foreground "steel blue"))))
+ '(dired-perm-write ((t nil)))
+ '(dired-symlink ((t (:foreground "cyan"))))
  '(eshell-prompt ((t (:foreground "green" :weight bold))))
  '(font-lock-builtin-face ((((type tty) (class color)) (:foreground "blue" :weight bold))))
  '(font-lock-comment-delimiter-face ((default (:foreground "cyan3")) (((class color) (min-colors 8) (background dark)) nil)))
@@ -143,3 +154,10 @@
  '(term-color-blue ((t (:background "steel blue" :foreground "steel blue"))))
  '(window-divider-last-pixel ((t (:foreground "dark gray")))))
 
+;; funcs
+
+(defun infer-indentation-style ()
+  "Set current buffer's indent-tabs-mode guessing the style used"
+  (interactive)
+  (setq-local indent-tabs-mode (>= (how-many "^\t" (point-min) (point-max))
+				   (how-many "^  " (point-min) (point-max)))))
