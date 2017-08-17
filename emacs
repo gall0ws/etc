@@ -6,6 +6,7 @@
 (global-set-key (kbd "M-g") 'goto-line)
 (global-set-key (kbd "C-h") 'backward-delete-char-untabify)
 (global-set-key (kbd "C-x M-a") 'acme-mouse-mode) ;; defined below
+(global-set-key (kbd "C-x M-t") 'transient-mark-mode)
 
 ;; frame default settings:
 (setq default-frame-alist
@@ -130,7 +131,7 @@
  '(dired-perm-write ((t nil)))
  '(dired-symlink ((t (:foreground "cyan"))))
  '(eshell-prompt ((t (:foreground "green" :weight bold))))
- '(font-lock-builtin-face ((((type tty) (class color)) (:foreground "blue" :weight bold))))
+ '(font-lock-builtin-face ((t (:foreground "green yellow"))))
  '(font-lock-comment-delimiter-face ((default (:foreground "cyan3")) (((class color) (min-colors 8) (background dark)) nil)))
  '(font-lock-comment-face ((t (:foreground "cyan3"))))
  '(font-lock-constant-face ((((type tty) (class color)) (:foreground "cyan" :weight bold))))
