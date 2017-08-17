@@ -3,6 +3,10 @@
 [ -z "$PS1" ] && return
 [ "$0" == "sh" ] && return
 
+amiroot() {
+    test `id -u` == 0
+}
+
 ## options
 set -o emacs
 bind ^L=clear-screen
@@ -14,66 +18,59 @@ export LANG LC_ALL
 
 ## variables
 PATH=.:$HOME/bin:/bin:/usr/bin:/usr/local/bin:/sbin:/usr/sbin:/usr/local/sbin:/usr/games
-GOPATH=~/go
-EDITOR=mg
-FCEDIT=$EDITOR
+EDITOR='mg -n'
 HOSTNAME=`hostname`
 PAGER='less -r'
 MANPAGER=$PAGER
-XDG_CONFIG_HOME=${HOME}/.config
+XDG_CONFIG_HOME=~/etc/config
 
-export PATH GOPATH EDITOR FCEDIT HOSTNAME PAGER MANPAGER XDG_CONFIG_HOME
+export PATH GOPATH EDITOR HOSTNAME PAGER MANPAGER XDG_CONFIG_HOME
+
+test ! -z "$DISPLAY" && amiroot && {
+	EDITOR=emacsclient
+	export EDITOR
+}
 
 ## prompt
-sym='%'
-test "$(id -u)"x == "0"x && sym='#'
-
-PS1="$sym "
-PS2=
+PS1='% '
+amiroot && PS1='# '
+PS2='  '
 
 # mouse friendly prompt:
 %() {
-	"$@"
+    "$@"
 }
 
 netprompt() {
-	PS1="${HOSTNAME}${sym} "
+    PS1="${HOSTNAME}=; "
 }
 
 test ! -z "$SSH_CONNECTION" || test ! -z "$NETPROMPT" && netprompt
 
 ## aliases
-alias ls='ls -F'
-alias unmount=umount
 alias j='jobs -l'
-alias vi=nvi
-alias rxvt=urxvtc
-alias emacs="emacsclient"
+alias ls='ls -F'
 alias mpv_mono='mpv --af=pan=1:[0.5,0.5]'
-
-## p9p environment
-PLAN9=/usr/local/plan9
-export PLAN9
-PATH=$PATH:$PLAN9/bin
-
-## ccache
-test x"$(id -u)" == x"0" && {
-	PATH=/usr/local/libexec/ccache:$PATH
-	CCACHE_PATH=/usr/bin:/usr/local/bin
-	CCACHE_DIR=/var/ccache
-	export PATH CCACHE_PATH CCACHE_DIR
-}
+alias rxvt=urxvtc
+alias unmount=umount
+alias vi=nvi
+alias xclip='xclip -selection clipboard'
 
 ## go stuff
-GOPATH=$HOME/go
+GOPATH=~/go
 PATH=$PATH:$GOPATH/bin
 export GOPATH PATH
 
 ## npm stuff
-NPM_CONFIG_PREFIX=~/npm-g
-PATH=$PATH:$NPM_CONFIG_PREFIX/bin
+NODE_PATH=~/opt/node_modules
+export NODE_PATH
 
 # functions
+cd() {
+    builtin cd "$@"
+    awd
+}
+
 mon() {
       tail -F /var/log/messages
 }
@@ -87,111 +84,27 @@ hist_off() {
     unset HISTFILE
 }
 
-## machine specific options
-case $HOSTNAME in
-macao*)
-	GOROOT=/usr/local/go
-	PATH=$PATH:$GOROOT/bin
-
-	ANDROID=/Users/gall0ws/Desktop/android-sdk-macosx/
-	PATH=$PATH:${ANDROID}/tools:${ANDROID}/platform-tools
-
-	PATH=/opt/local/bin:$PATH # macports
-	export GOROOT PATH
-
-	alias octave=/Applications/Octave.app/Contents/Resources/bin/octave
-	;;
-
-5620z.local)
-	GOROOT=/usr/lib/go
-	INFERNO=$HOME/inferno
-	ANDROID=$HOME/android-sdk-linux
-	PATH=$PATH:$GOROOT/bin:$INFERNO/Linux/386/bin:$ANDROID/tools
-	export GOROOT
-	
-	for i in \
-		dhclient\
-		wpa_supplicant\
-		wpa_cli\
-		ifconfig\
-		apt-get\
-	; do
-		alias $i="sudo $i"
-	done
-	
-	↑() {
-		setsid $@ >/dev/null 2>/tmp/arrow.log
-	}
-	
-	;;
-
-hpi5)
-	for i in \
-	    go		\
-	    jdk		\
-	    node	\
-	    plan9port	\
-	    vbox	\
-	    ; do . /etc/profile.d/${i}.sh
-	done
-	;;
-
-banana2.local)
-	if [ "`uname`" == "FreeBSD" ]; then
-	
-		for i in \
-			zzz\
-			freq\
-			shutdown\
-		; do
-		alias $i="sudo $i"
-	done
-	
-		cdports() {
-			  test ! -z "$1" && __dir=$1
-			  cd /usr/ports/${__dir}
-		}
-		rdsysctl() {
-			/sbin/sysctl $1 | cut -d: -f2-
-		}
-		temp() {
-			n=$1
-			test -z "$n" && n=0
-
-			rdsysctl hw.acpi.thermal.tz$n.temperature
-		}
-	fi
-esac
-
 ## terminal specific options
 case "$TERM" in
-dumb)
-	if [ "$termprog" == "9term" ] || [ "$termprog" == "win" ]; then
-		## pagers are for sissies:
-		export PAGER=cat
-		export MANPAGER=nobs
-	
-		## misc:
-		set +o emacs
-		set +o vi
-	fi
+    eterm-color)
+	EDITOR=emacsclient
+	export EDITOR
+	alias awd=
+	;;
 
+    dumb)
+	export PAGER=cat
+	export MANPAGER=nobs
+	set +o emacs
+	set +o vi
 	if [ ! -z "$EMACS" ]; then
-	   alias awd=
-	   alias git='git --no-pager'
+	    alias awd=
 	fi
 	;;
-rxvt*)
-	;;
-*)
-	alias awd=	
-	;;
-
 esac
 
-cd() {
-	builtin cd "$@"
-	awd
-}
-
-awd 
+for i in ${HOSTNAME} local; do
+    if [ -r ~/etc/kshrc.${i} ]; then
+	. ~/etc/kshrc.${i}
+    fi
+done
