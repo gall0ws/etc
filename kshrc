@@ -89,7 +89,7 @@ case "$TERM" in
     eterm-color)
 	EDITOR=emacsclient
 	export EDITOR
-	alias awd=
+	awd() { }
 	;;
 
     dumb)
@@ -98,7 +98,7 @@ case "$TERM" in
 	set +o emacs
 	set +o vi
 	if [ ! -z "$EMACS" ]; then
-	    alias awd=
+	    awd() { }
 	fi
 	;;
 esac
