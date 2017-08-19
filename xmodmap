@@ -1,11 +1,22 @@
+## -*- sh -*-
+##
+## source this from ~/.xinitrc
+##
+
 case "$HOSTNAME" in
 
-banana2.local)
-	xmodmap -e "keycode 244 = XF86Launch0"
+banana2*)
+	xmodmap -e "keycode 244	 = XF86Launch0"
 	xmodmap -e "keycode 95 = XF86LaunchF"
 	xmodmap -e "keycode 238 = XF86Terminal"
 	xmodmap -e "keycode 179 = Prev_Virtual_Screen"
 	xmodmap -e "keycode 180 = Next_Virtual_Screen"
+	;;
+x220*)
+	xmodmap -e "keycode 117 = XF86Launch0"
+	xmodmap -e "keycode 95 = XF86LaunchF"
+	xmodmap -e "keycode 234 = Prev_Virtual_Screen"
+	xmodmap -e "keycode 233 = Next_Virtual_Screen"
 	;;
 *)
 	;;
