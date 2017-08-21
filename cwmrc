@@ -1,0 +1,155 @@
+### cwmrc
+
+## misc
+borderwidth 3
+fontname "terminus:pixelsize=12"
+moveamount 2
+snapdist 10
+sticky yes
+gap 16 0 0 0
+
+## colors
+
+# menu
+color font	black
+color menubg	gray28
+color menufg	gray10
+color selfont	gray100
+
+# windows
+color activeborder	gray28
+color inactiveborder	gray10
+color urgencyborder	yellow
+color groupborder	blue
+
+# commands
+command lock		lock
+command term		st
+command browser		firefox
+command emacs		emacs
+
+## bindings
+
+# general
+bind C4M-r	restart
+bind 4-Return	st
+bind 4-space	exec
+bind C4M-w	exec WindowManager
+bind 4-period	ssh
+
+# groups
+bind 4-1	grouponly1
+bind 4-2	grouponly2
+bind 4-3	grouponly3
+bind 4-4	grouponly4
+
+bind S4-1	movetogroup1
+bind S4-2	movetogroup2
+bind S4-3	movetogroup3
+bind S4-4	movetogroup4
+
+bind C4-0	nogroup
+bind C4-1	group1
+bind C4-2	group2
+bind C4-3	group3
+bind C4-4	group4
+
+bind 4-XF86Forward	cyclegroup
+bind 4-XF86Back		rcyclegroup
+bind M-Tab		cycleingroup
+bind MS-Tab		rcycleingroup
+
+# groups
+bind CM-1	grouponly1
+bind CM-2	grouponly2
+bind CM-3	grouponly3
+bind CM-4	grouponly4
+
+bind MS-1	group1
+bind MS-2	group2
+
+# current window
+bind 4-F11	fullscreen
+bind S4-F11	maximize
+bind 4-r	label
+bind 4-s	search
+
+bind C4-q	delete
+bind 4-m	hide
+bind 4-z	raise
+bind 4-x	lower
+bind 4-equal	vmaximize
+bind S4-equal	hmaximize
+bind 4-slash	vtile
+bind S4-slash	htile
+
+bind 4-h	moveleft
+bind 4-j	movedown
+bind 4-k	moveup
+bind 4-l	moveright
+
+bind 4S-h	bigmoveleft
+bind 4S-j	bigmovedown
+bind 4S-k	bigmoveup
+bind 4S-l	bigmoveright
+
+bind M4-h	resizeleft
+bind M4-j	resizedown
+bind M4-k	resizeup
+bind M4-l	resizeright
+bind SM4-h	bigresizeleft
+bind SM4-j	bigresizedown
+bind SM4-k	bigresizeup
+bind SM4-l	bigresizeright
+
+# mouse
+mousebind M-1  window_move
+mousebind M-3  window_resize
+
+# clear bindings
+bind C-slash	unmap
+bind C4-plus	unmap
+bind CM-0	unmap
+bind CM-1	unmap
+bind CM-2	unmap
+bind CM-3	unmap
+bind CM-4	unmap
+bind CM-equal	unmap
+bind CM-Delete	unmap
+bind CM-Return	unmap
+bind CM-Return	unmap
+bind CM-0	unmap
+bind CM-1	unmap
+bind CM-2	unmap
+bind CM-3	unmap
+bind CM-equal	unmap
+bind CM-f	unmap
+bind CM-g	unmap
+bind CM-h	unmap
+bind CM-j	unmap
+bind CM-k	unmap
+bind CM-l	unmap
+bind CM-m	unmap
+bind CM-n	unmap
+bind CM-s	unmap
+bind CM-w	unmap
+bind CM-x	unmap
+bind CMS-equal	unmap
+bind CMS-f	unmap
+bind CMS-q	unmap
+bind CMS-r	unmap
+bind CMS-r	unmap
+bind M-period	unmap
+bind M-slash	unmap
+bind SM-slash	unmap
+bind M-Down	unmap
+bind M-Left	unmap
+bind M-Right	unmap
+bind M-Return	unmap
+bind M-Right	unmap
+bind M-Up	unmap
+bind M-h	unmap
+bind M-j	unmap
+bind M-k	unmap
+bind M-l	unmap
+bind M-Up	unmap
