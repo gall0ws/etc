@@ -1,8 +1,8 @@
 ### cwmrc
 
 ## misc
-borderwidth 3
-fontname "terminus:pixelsize=12"
+borderwidth 2
+fontname "terminus:pixelsize=14"
 moveamount 2
 snapdist 10
 sticky yes
@@ -11,7 +11,7 @@ gap 16 0 0 0
 ## colors
 
 # menu
-color font	black
+color font	gray80
 color menubg	gray28
 color menufg	gray10
 color selfont	gray100
@@ -59,15 +59,6 @@ bind 4-XF86Back		rcyclegroup
 bind M-Tab		cycleingroup
 bind MS-Tab		rcycleingroup
 
-# groups
-bind CM-1	grouponly1
-bind CM-2	grouponly2
-bind CM-3	grouponly3
-bind CM-4	grouponly4
-
-bind MS-1	group1
-bind MS-2	group2
-
 # current window
 bind 4-F11	fullscreen
 bind S4-F11	maximize
@@ -76,8 +67,8 @@ bind 4-s	search
 
 bind C4-q	delete
 bind 4-m	hide
-bind 4-z	raise
-bind 4-x	lower
+bind 4-z	lower
+bind 4-x	raise
 bind 4-equal	vmaximize
 bind S4-equal	hmaximize
 bind 4-slash	vtile
