@@ -20,26 +20,21 @@ export LANG LC_ALL
 PATH=.:$HOME/bin:/bin:/usr/bin:/usr/local/bin:/sbin:/usr/sbin:/usr/local/sbin:/usr/games
 EDITOR='mg -n'
 HOSTNAME=`hostname`
-PAGER='less -r'
+PAGER='less -rX'
 MANPAGER=$PAGER
 XDG_CONFIG_HOME=~/etc/config
 
 export PATH GOPATH EDITOR HOSTNAME PAGER MANPAGER XDG_CONFIG_HOME
 
-test ! -z "$DISPLAY" && amiroot && {
+test ! -z "$DISPLAY" && ! amiroot && {
 	EDITOR=emacsclient
 	export EDITOR
 }
 
 ## prompt
-PS1='% '
+PS1='$ '
 amiroot && PS1='# '
 PS2='  '
-
-# mouse friendly prompt:
-%() {
-    "$@"
-}
 
 netprompt() {
     PS1="${HOSTNAME}=; "
@@ -49,11 +44,13 @@ test ! -z "$SSH_CONNECTION" || test ! -z "$NETPROMPT" && netprompt
 
 ## aliases
 alias j='jobs -l'
-alias ls='ls -F'
+alias linen='awk '\''{printf "%d %s\n", NR, $0}'\'''
+alias mess='tail -F /var/log/messages'
 alias mpv_mono='mpv --af=pan=1:[0.5,0.5]'
-alias rxvt=urxvtc
+alias tac='linen | sort -rn | sed "s/^[0-9]* //g"'
 alias unmount=umount
-alias vi=nvi
+alias urxvt=urxvtcd
+
 alias xclip='xclip -selection clipboard'
 
 ## go stuff
@@ -71,10 +68,6 @@ cd() {
     awd
 }
 
-mon() {
-      tail -F /var/log/messages
-}
-
 hist_on() {
     HISTFILE=~/.mksh_history
     export HISTFILE
@@ -82,6 +75,11 @@ hist_on() {
 
 hist_off() {
     unset HISTFILE
+}
+
+newpass() {
+    len=${1:-40}
+    openssl rand -base64 32 | tr +/ -_ | cut -c-$len
 }
 
 ## terminal specific options
