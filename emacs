@@ -103,7 +103,7 @@
  '(hourglass-delay 0)
  '(indent-tabs-mode t)
  '(inhibit-startup-screen t)
- '(js-indent-level 2)
+ '(js-indent-level 4)
  '(line-spacing 2)
  '(mouse-autoselect-window t)
  '(next-line-add-newlines nil)
@@ -162,3 +162,13 @@
   (interactive)
   (setq-local indent-tabs-mode (>= (how-many "^\t" (point-min) (point-max))
 				   (how-many "^  " (point-min) (point-max)))))
+
+(defun chomp ()
+  "Remove trailing whitespaces"
+  (interactive)
+  (replace-regexp "[ 	]+$" ""))
+
+(defun show-file-name ()
+  "Show current buffer file name in the minibuffer"
+  (interactive)
+  (message buffer-file-name))
