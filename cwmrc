@@ -18,135 +18,136 @@ color menufg	gray10
 color selfont	gray100
 
 # windows
-color activeborder	gray28
-color inactiveborder	gray10
+color activeborder	gray50
+color inactiveborder	gray30
 color urgencyborder	yellow
 color groupborder	blue
 
 # commands
-command lock		lock
-command term		urxvtcd
-command browser		firefox
+command term	 	xterm
+command browser		chrome
 command emacs		emacs
+command bc           'xterm bc -l'
 command xkill		xkill
 
 ## bindings
 
 # general
-bind C4M-r	restart
-bind 4-Return	urxvtcd
-bind 4-space	menu
-bind C4M-w	exec WindowManager
-bind 4-period	ssh
+bind-key CM4-r		restart
+bind-key 4-Return 	'xterm tmux'
+bind-key S4-Return	xterm
+bind-key 4-space	/home/gall0ws/bin/menu
+bind-key C4M-w		exec WindowManager
+bind-key 4-period	menu-ssh
 
-bind XF86AudioRaiseVolume "mixer vol +10"
-bind XF86AudioLowerVolume "mixer vol -10"
+#bind-key XF86AudioRaiseVolume "mixer vol +10"
+#bind-key XF86AudioLowerVolume "mixer vol -10"
 
 # groups
-bind 4-1	grouponly1
-bind 4-2	grouponly2
-bind 4-3	grouponly3
-bind 4-4	grouponly4
+bind-key 4-1	group-only-1
+bind-key 4-2	group-only-2
+bind-key 4-3	group-only-3
+bind-key 4-4	group-only-4
 
-bind S4-0	grouptoggle
-bind S4-1	movetogroup1
-bind S4-2	movetogroup2
-bind S4-3	movetogroup3
-bind S4-4	movetogroup4
+bind-key S4-0	window-stick
+bind-key CS4-0  window-group
+bind-key S4-1	window-movetogroup-1
+bind-key S4-2	window-movetogroup-2
+bind-key S4-3	window-movetogroup-3
+bind-key S4-4	window-movetogroup-4
 
-bind C4-0	nogroup
-bind C4-1	group1
-bind C4-2	group2
-bind C4-3	group3
-bind C4-4	group4
+bind-key C4-1	group1
+bind-key C4-2	group2
+bind-key C4-3	group3
+bind-key C4-4	group4
 
-bind 4-XF86Forward	cyclegroup
-bind 4-XF86Back		rcyclegroup
-bind M-Tab		cycleingroup
-bind MS-Tab		rcycleingroup
+bind-key 4-XF86Forward	group-cycle
+bind-key 4-XF86Back	group-rcycle
+bind-key M-Tab		window-cycle-ingroup
+bind-key MS-Tab		window-rcycle-ingroup
 
 # current window
-bind 4-F11	fullscreen
-bind S4-F11	maximize
-bind 4-r	label
-bind 4-s	search
+bind-key 4-F11	window-fullscreen
+bind-key S4-F11	window-maximize
+bind-key 4-r	window-menu-label
+bind-key 4-s	menu-window
 
-bind 4-q	delete
-bind 4-m	hide
-bind 4-z	lower
-bind 4-x	raise
-bind 4-equal	vmaximize
-bind S4-equal	hmaximize
-bind 4-slash	vtile
-bind S4-slash	htile
+bind-key 4-q	window-delete
+bind-key 4-m	window-hide
+bind-key 4-z	window-lower
+bind-key 4-x	window-raise
+bind-key 4-equal	window-vmaximize
+bind-key S4-equal	window-hmaximize
+bind-key 4-slash	window-vtile
+bind-key S4-slash	window-htile
 
-bind 4-h	moveleft
-bind 4-j	movedown
-bind 4-k	moveup
-bind 4-l	moveright
+bind-key 4-h	window-move-left
+bind-key 4-j	window-move-down
+bind-key 4-k	window-move-up
+bind-key 4-l	window-move-right
 
-bind 4S-h	bigmoveleft
-bind 4S-j	bigmovedown
-bind 4S-k	bigmoveup
-bind 4S-l	bigmoveright
+bind-key 4S-h	window-move-left-big
+bind-key 4S-j	window-move-down-big
+bind-key 4S-k	window-move-up-big
+bind-key 4S-l	window-move-right-big
 
-bind M4-h	resizeleft
-bind M4-j	resizedown
-bind M4-k	resizeup
-bind M4-l	resizeright
-bind SM4-h	bigresizeleft
-bind SM4-j	bigresizedown
-bind SM4-k	bigresizeup
-bind SM4-l	bigresizeright
+bind-key M4-h	window-resize-left
+bind-key M4-j	window-resize-down
+bind-key M4-k	window-resize-up
+bind-key M4-l	window-resize-right
+bind-key SM4-h	window-resize-left-big
+bind-key SM4-j	window-resize-down-big
+bind-key SM4-k	window-resize-up-big
+bind-key SM4-l	window-resize-right-big
 
 # mouse
-mousebind M-1  window_move
-mousebind M-3  window_resize
+bind-mouse M-1  window-move
+bind-mouse M-3  window-resize
 
 # clear bindings
-bind C-slash	unmap
-bind C4-plus	unmap
-bind CM-0	unmap
-bind CM-1	unmap
-bind CM-2	unmap
-bind CM-3	unmap
-bind CM-4	unmap
-bind CM-equal	unmap
-bind CM-Delete	unmap
-bind CM-Return	unmap
-bind CM-Return	unmap
-bind CM-0	unmap
-bind CM-1	unmap
-bind CM-2	unmap
-bind CM-3	unmap
-bind CM-equal	unmap
-bind CM-f	unmap
-bind CM-g	unmap
-bind CM-h	unmap
-bind CM-j	unmap
-bind CM-k	unmap
-bind CM-l	unmap
-bind CM-m	unmap
-bind CM-n	unmap
-bind CM-s	unmap
-bind CM-w	unmap
-bind CM-x	unmap
-bind CMS-equal	unmap
-bind CMS-f	unmap
-bind CMS-q	unmap
-bind CMS-r	unmap
-bind CMS-r	unmap
-bind M-period	unmap
-bind M-slash	unmap
-bind SM-slash	unmap
-bind M-Down	unmap
-bind M-Left	unmap
-bind M-Right	unmap
-bind M-Return	unmap
-bind M-Right	unmap
-bind M-Up	unmap
-bind M-h	unmap
-bind M-j	unmap
-bind M-k	unmap
-bind M-l	unmap
-bind M-Up	unmap
+bind-key C-slash	unmap
+bind-key C4-plus	unmap
+bind-key CM-0	unmap
+bind-key CM-1	unmap
+bind-key CM-2	unmap
+bind-key CM-3	unmap
+bind-key CM-4	unmap
+bind-key CM-equal	unmap
+bind-key CM-Delete	unmap
+bind-key CM-Return	unmap
+bind-key CM-Return	unmap
+bind-key CM-0	unmap
+bind-key CM-1	unmap
+bind-key CM-2	unmap
+bind-key CM-3	unmap
+bind-key CM-equal	unmap
+bind-key CM-f	unmap
+bind-key CM-g	unmap
+bind-key CM-h	unmap
+bind-key CM-j	unmap
+bind-key CM-k	unmap
+bind-key CM-l	unmap
+bind-key CM-m	unmap
+bind-key CM-n	unmap
+bind-key CM-s	unmap
+bind-key CM-w	unmap
+bind-key CM-x	unmap
+bind-key CMS-equal	unmap
+bind-key CMS-f	unmap
+bind-key CMS-q	unmap
+bind-key CMS-r	unmap
+bind-key CMS-r	unmap
+bind-key M-period	unmap
+bind-key M-slash	unmap
+bind-key SM-slash	unmap
+bind-key M-Down	unmap
+bind-key M-Left	unmap
+bind-key M-Right	unmap
+bind-key M-Return	unmap
+bind-key M-Right	unmap
+bind-key M-Up	unmap
+bind-key M-h	unmap
+bind-key M-j	unmap
+bind-key M-k	unmap
+bind-key M-l	unmap
+bind-key M-Up	unmap
