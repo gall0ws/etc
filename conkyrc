@@ -13,8 +13,9 @@ draw_borders no
 draw_outline no
 draw_shades no
 border_inner_margin 0
-use_xft yes
-xftfont terminus:size=9
+#use_xft yes
+#xftfont terminus:size=9
+font -*-terminus-*-*-*-*-12-*-*-*-*-*-*-*
 default_color 8A8A8A
 own_window_colour 131112
 color0 B7B7B7
@@ -31,18 +32,20 @@ double_buffer yes
 update_interval 1
 
 TEXT
-${color1}|${color} ${nodename_short} ${color1}|${color} \
+${color1}|${color} ${execi 3600 uname -sr} ${color1}|${color} \
 ${if_up em0}IF ${color0}em0${color1}|${color}${endif}\
 ${if_up em0}IP ${color0}${addr em0} ${color1}|${color} ${endif}\
 ${if_up wlan0}IF ${color0}wlan0 ${color1}|${color} ${endif}\
 ${if_up wlan0}IP ${color0}${addr wlan0} ${color1}|${color} ${endif}\
 ${if_up tun0}IF ${color0}tun0 ${color1}|${color} ${endif}\
 ${if_up tun0}IP ${color0}${addr tun0} ${color1}|${color} ${endif}\
+${if_up rtwn0}IF ${color0}rtwn0 ${color1}|${color} ${endif}\
+${if_up rtwn0}IP ${color0}${addr rtwn0} ${color1}|${color} ${endif}\
 ${alignr} ${color1}|${color} \
-MEM ${color0}${membar 4,80} ${color1}|${color} \
-CPU ${color0}${cpubar 4,80} ${color1}|${color} \
-FRQ ${color0}${freq 0}MHz ${color1}|${color} \
-TMP ${color0}${acpitemp}C ${color1}|${color} \
-BAT ${color0}${battery_percent BAT0}%${color} ${color1}|${color} \
-VOL ${color0}${if_mixer_mute}OFF${else}${mixer}${endif}${color} ${color1}|${color} \
-CLK ${color0}${time %a %d %b %H:%M} ${color1}|${color}
+RAM ${color0}${membar 4,80} ${color1}|${color} \
+CPU ${color0}${cpubar cpu0 4,80} ${color1}|${color} \
+FRQ ${color0}${freq_g 0}GHz ${color1}|${color} \
+TMP ${color0}${execi 5 sysctl -n hw.sensors.acpitz0.temp0 | cut -d. -f1}C ${color1}|${color} \
+BAT ${color0}${apm_battery_life}${color} ${color1}|${color} \
+VOL ${color0}${if_mixer_mute}OFF${else}${mixer}${endif}${color} ${color1}|${color}\
+${color0}${time %a %d %b %H:%M} ${color1}|${color}
