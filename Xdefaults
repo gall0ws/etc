@@ -1,6 +1,20 @@
-Rxvt.background:	#000
-Rxvt.foreground:	#fff
-Rxvt.cursorColor:	#fff
-Rxvt.font:		-*-terminus-*-*-*-*-*-120-*-*-*-*-*-*
-Rxvt.scrollBar:		false
-Rxvt.fading:		15
+Xcursor.theme: Adwaita
+
+xterm*background:       black
+xterm*foreground:       white
+xterm*cursorColor:      white
+
+xterm*boldMode:		false
+xterm*scrollBar:        false
+xterm*loginShell:       true
+xterm*metaSendsEscape:  true
+
+xterm*font:                -*-terminus-medium-*-*-*-12-*-*-*-*-*-*-15
+
+xterm*faceName:		Terminus
+xterm*faceSize:		10
+xterm*faceSize2: 	 9
+xterm*faceSize3:	12
+xterm*faceSize4:	14
+xterm*faceSize5: 	18
+xterm*faceSize6: 	24
