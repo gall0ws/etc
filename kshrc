@@ -1,39 +1,39 @@
-## -*- sh -*-
-[ -z "$PS1" ] && return
-[ "$0" == "sh" ] && return
+# echo '. ~/etc/kshrc' >> ~/.profile
+#set -x
 
-amiroot() {
-    test `id -u` == 0
-}
+[ -z "$PS1" ] && return
+[ `basename -- "$0"` == "sh" ] && return
 
 ## options
 HISTCONTROL='ignoredups:ignorespace'
 HISTFILE=$HOME/.ksh_history
 set -o emacs
-bind -m ^L="^U^K clear^M^Y"
+bind -m ^L="^U clear^M^Y"
 
 ## locale
-LANG=en_US.UTF-8
-LC_ALL=en_US.UTF-8
+LANG=en_GB.UTF-8
+LC_ALL=en_GB.UTF-8
 export LANG LC_ALL
 
 ## variables
+PATH=~/bin:$PATH
 EDITOR=vi
 BLOCKSIZE=K
 HOSTNAME=`hostname`
 PAGER='less -rX'
 MANPAGER=$PAGER
-XDG_CONFIG_HOME=~/etc/config
+XDG_CONFIG_HOME=~/etc/xdg
 
-export GOPATH EDITOR BLOCKSIZE HOSTNAME PAGER MANPAGER XDG_CONFIG_HOME
+export PATH EDITOR BLOCKSIZE HOSTNAME PAGER MANPAGER XDG_CONFIG_HOME
 
 ## prompt
-PS1='$ '
-amiroot && PS1='# '
-PS2='  '
+psym='$'
+test `id -u` == 0 && psym='#'
+PS1="$psym "
+PS2=" "
 
 netprompt() {
-    PS1="`hostname -s`$ "
+    PS1="`hostname -s`$psym "
 }
 
 test ! -z "$SSH_CONNECTION" || test ! -z "$NETPROMPT" && netprompt
@@ -45,7 +45,6 @@ alias mess='tail -f /var/log/messages'
 alias mpv_mono='mpv --af=pan=1:[0.5,0.5]'
 alias tac='linen | sort -rn | sed "s/^[0-9]* //g"'
 alias unmount=umount
-
 alias xclip='xclip -selection clipboard'
 
 ## go stuff
@@ -61,12 +60,9 @@ export NODE_PATH
 case "$TERM" in
     dumb)
 	export PAGER=cat
-	export MANPAGER=nobs
+	export MANPAGER=cat
 	set +o emacs
 	set +o vi
-	if [ ! -z "$EMACS" ]; then
-	    awd() { }
-	fi
 	;;
 esac
 
