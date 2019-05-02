@@ -1,0 +1,20 @@
+# -*- sh -*-
+
+for i in \
+	go		\
+	jdk		\
+	node		\
+	plan9port	\
+	vbox		\
+	; do
+    test -r /etc/profile.d/${i}.sh && . /etc/profile.d/${i}.sh
+done
+
+export PATH=$PATH:/sbin:/usr/sbin:/usr/local/sbin
+export EDITOR=nvi
+
+alias ls='ls --color=auto'
+alias vi=nvi
+alias source=.
+
+set -o emacs
