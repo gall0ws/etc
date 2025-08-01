@@ -42,16 +42,6 @@
           '(lambda()
              (local-set-key (kbd "C-l") 'eshell-clear-buffer)))
 
-;; additional modes:
-;; (setq additional-modes
- ;;      (list ;; (path . load-function) ...
- ;;       '("~/.emacs.d/downloaded/acme-mouse" . (lambda()
- ;; 				      (require 'acme-mouse)
- ;; 				      (define-global-minor-mode acme-global-mouse-mode
- ;; 					acme-mouse-mode
- ;; 					(lambda() (acme-mouse-mode t)))
- ;; 				      (acme-global-mouse-mode)))
-
 (let ((acme-el "~/.emacs.d/downloaded/acme-mouse/acme-mouse.el"))
   (when (file-exists-p acme-el)
     (progn
@@ -98,7 +88,8 @@
       delete-old-versions t)
 
 ;; misc:
-;(menu-bar-mode -1)
+(if (not (display-graphic-p))
+    (menu-bar-mode -1))
 (tool-bar-mode -1)
 (blink-cursor-mode -1)
 (windmove-default-keybindings 'shift)
@@ -129,7 +120,8 @@
  '(compile-auto-highlight t)
  '(compile-command "make -s ")
  '(custom-safe-themes
-   '("6b5c518d1c250a8ce17463b7e435e9e20faa84f3f7defba8b579d4f5925f60c1"
+   '("5a0ddbd75929d24f5ef34944d78789c6c3421aa943c15218bac791c199fc897d"
+     "6b5c518d1c250a8ce17463b7e435e9e20faa84f3f7defba8b579d4f5925f60c1"
      "d14f3df28603e9517eb8fb7518b662d653b25b26e83bd8e129acea042b774298"
      "7661b762556018a44a29477b84757994d8386d6edee909409fabe0631952dad9"
      "4cf9ed30ea575fb0ca3cff6ef34b1b87192965245776afa9e9e20c17d115f3fb"
@@ -157,10 +149,10 @@
  '(next-line-add-newlines nil)
  '(objc-font-lock-extra-types nil)
  '(package-selected-packages
-   '(exec-path-from-shell go-errcheck go-autocomplete origami folding
-                          company web-mode tide typescript-mode
-                          ace-window markdown-mode magit gruvbox-theme
-                          acme-theme afternoon-theme))
+   '(ace-window acme-theme afternoon-theme company exec-path-from-shell
+                folding go-autocomplete go-errcheck gruvbox-theme
+                magit markdown-mode origami tide typescript-mode
+                web-mode))
  '(query-replace-highlight t)
  '(require-final-newline t)
  '(safe-local-variable-values '((indent . 8)))
@@ -194,3 +186,9 @@
   (message buffer-file-name))
 
 (load-theme 'gruvbox-dark-medium)
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
