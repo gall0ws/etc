@@ -3,11 +3,11 @@ export PATH="/opt/homebrew/opt/node@14/bin:$PATH"
 PS1='; '
 PS2='	'
 WORDCHARS='*?_-.[]~=&;!#$%^(){}<>'
+EDITOR='emacs -nw'
 
-export PS1 PS2 WORDCHARS
+export PS1 PS2 WORDCHARS EDITOR
 
-alias ls='/bin/ls -G'
-alias lc='/bin/ls -F'
+alias ls='lsr --group-directories-first --icons=auto --hyperlinks=never'
 
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 
