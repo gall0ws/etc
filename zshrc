@@ -3,12 +3,13 @@ export PATH="/opt/homebrew/opt/node@14/bin:$PATH"
 PS1='; '
 PS2='	'
 WORDCHARS='*?_-.[]~=&;!#$%^(){}<>'
-EDITOR='emacs -nw'
+EDITOR=mg
 
 export PS1 PS2 WORDCHARS EDITOR
 
-
 alias ls='ls -G'
+alias scrsaver="open /System/Library/CoreServices/ScreenSaverEngine.app"
+alias bootout="sudo launchctl bootout user/`id -u`"
 
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 
