@@ -1,0 +1,12 @@
+# This is Git's per-user configuration file.
+[user]
+name = gall0ws
+email = g4ll0ws@gmail.com
+
+[core]	
+editor = mg
+
+[alias]
+st = status
+ci = commit
+br = branch
