@@ -1,3 +1,4 @@
+bsmap-mode
 column-number-mode
 backup-to-home-directory
 leave-tmpdir-backups
