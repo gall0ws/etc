@@ -16,7 +16,7 @@ sudo_command = "sudo"
 
 # Disable specific steps - same options as the command line flag
 # disable = ["system", "emacs"]
-disable = [ "containers" ]
+disable = [ "containers", "stack" ]
 
 # Ignore failures for these steps
 # ignore_failures = ["powershell"]
@@ -98,7 +98,7 @@ notify_each_step = true
 # "Custom command using interactive shell (unix)" = "-i vim_upgrade"
 
 "emacs packages" = "-i emacs -l ~/.emacs --batch -f package-upgrade-all"
-"cpan" = "-i cpan-outdated -p | cpanm"
+#"cpan" = "-i cpan-outdated -p | cpanm"
 "yt-dlp nightly" = "-i ~/bin/yt-dlp-nightly --update-to nightly"
 
 [python]
