@@ -147,6 +147,7 @@
  '(js-indent-level 4)
  '(line-spacing 2)
  '(mouse-autoselect-window t)
+ '(mouse-drag-and-drop-region 'meta)
  '(next-line-add-newlines nil)
  '(objc-font-lock-extra-types nil)
  '(package-selected-packages

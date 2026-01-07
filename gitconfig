@@ -10,3 +10,5 @@ editor = mg
 st = status
 ci = commit
 br = branch
+di = diff
+co = checkout
