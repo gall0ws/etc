@@ -4,8 +4,8 @@ PS1='; '
 PS2='	'
 WORDCHARS='*?_-.[]~=&;!#$%^(){}<>'
 EDITOR=mg
-
-export PS1 PS2 WORDCHARS EDITOR
+XDG_CONFIG_HOME=$HOME/.config
+export PS1 PS2 WORDCHARS EDITOR XDG_CONFIG_HOME
 
 alias ls='ls -G'
 alias scrsaver="open /System/Library/CoreServices/ScreenSaverEngine.app"
