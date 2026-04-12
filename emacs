@@ -195,4 +195,4 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:family "AnonymicePro Nerd Font Mono" :foundry "nil" :slant normal :weight regular :height 160 :width normal)))))
+ '(default ((t (:family "Anonymous Pro" :foundry "nil" :slant normal :weight regular :height 160 :width normal)))))
