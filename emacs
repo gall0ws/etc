@@ -103,6 +103,7 @@
  ;; If there is more than one, they won't work right.
  '(ansi-color-faces-vector
    [default default default italic underline success warning error])
+ '(blink-cursor-mode nil)
  '(c-basic-offset 'set-from-style)
  '(c-default-style
    '((c-mode . "linux") (c++-mode . "stroustrup")
@@ -160,7 +161,8 @@
  '(safe-local-variable-values '((indent . 8)))
  '(slime-kill-without-query-p t)
  '(slime-net-coding-system 'utf-8-unix)
- '(term-suppress-hard-newline t))
+ '(term-suppress-hard-newline t)
+ '(tool-bar-mode nil))
 
 ;; funcs
 (defun infer-indentation-style ()
@@ -193,4 +195,4 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(default ((t (:family "AnonymicePro Nerd Font Mono" :foundry "nil" :slant normal :weight regular :height 160 :width normal)))))
