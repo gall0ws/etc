@@ -6,6 +6,10 @@ LESS='-FMR --mouse'
 XDG_CONFIG_HOME=$HOME/.config
 export PS1 PS2 WORDCHARS EDITOR LESS XDG_CONFIG_HOME
 
+if [ "$TERM_PROGRAM" = "iTerm.app" ]; then
+	export PS1=" "
+fi
+
 alias ls='lsd --date=relative --group-dirs=first --size=short --git'
 alias la='ls -a'
 alias lA='ls -A'
