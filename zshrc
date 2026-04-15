@@ -22,6 +22,7 @@ alias diff='diff -u'
 alias scrsaver="open /System/Library/CoreServices/ScreenSaverEngine.app"
 alias bootout="sudo launchctl bootout user/`id -u`"
 alias convert="magick"
+alias dequarantine='xattr -r -d com.apple.quarantine'
 
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 
