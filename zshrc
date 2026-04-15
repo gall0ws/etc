@@ -1,10 +1,11 @@
 PS1='%F{150}> %f'
 PS2='	'
+PATH=$HOME/bin:$PATH
 WORDCHARS='*?_-.[]~=&;!#$%^(){}<>'
 EDITOR=mg
 LESS='-FMR --mouse'
 XDG_CONFIG_HOME=$HOME/.config
-export PS1 PS2 WORDCHARS EDITOR LESS XDG_CONFIG_HOME
+export PS1 PS2 PATH WORDCHARS EDITOR LESS XDG_CONFIG_HOME
 
 if [ "$TERM_PROGRAM" = "iTerm.app" ]; then
 	export PS1=" "
