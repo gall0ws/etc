@@ -1,5 +1,5 @@
 PS1='%F{150}> %f'
-PS2='	'
+PS2=' '
 PATH=$HOME/bin:$PATH
 WORDCHARS='*?_-.[]~=&;!#$%^(){}<>'
 EDITOR=mg
