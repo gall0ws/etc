@@ -189,7 +189,8 @@
   (interactive)
   (message buffer-file-name))
 
-(load-theme 'gruvbox-dark-medium)
+(when (memq window-system '(ns x))
+    (load-theme 'gruvbox-dark-medium))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

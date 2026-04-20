@@ -4,7 +4,7 @@ name = gall0ws
 email = g4ll0ws@gmail.com
 
 [core]	
-editor = mg
+editor = emacsclient -nw
 
 [alias]
 st = status

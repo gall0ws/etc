@@ -1,12 +1,15 @@
+## hey emacs, this is an -*-sh-*- file!
+
 PS1='%F{150}> %f'
 PS2=' '
 PATH=$HOME/bin:$PATH
 MANPATH=$HOME/man:
 WORDCHARS='*?_-.[]~=&;!#$%^(){}<>'
-EDITOR=mg
+EDITOR="emacsclient -nw"
+ALTERNATE_EDITOR=""
 LESS='-FMR --mouse'
 XDG_CONFIG_HOME=$HOME/.config
-export PS1 PS2 PATH MANPATH WORDCHARS EDITOR LESS XDG_CONFIG_HOME
+export PS1 PS2 PATH MANPATH WORDCHARS EDITOR ALTERNATE_EDITOR LESS XDG_CONFIG_HOME
 
 if [ "$TERM_PROGRAM" = "iTerm.app" ]; then
 	export PS1=" "
@@ -20,6 +23,7 @@ alias lla='ll -a'
 alias llA='ll -A'
 alias lst='ls --tree'
 
+alias emacs="emacsclient -nw"
 alias diff='diff -u'
 alias scrsaver="open /System/Library/CoreServices/ScreenSaverEngine.app"
 alias bootout="sudo launchctl bootout user/`id -u`"
