@@ -97,9 +97,8 @@ notify_each_step = true
 # "Python Environment" = "~/dev/.env/bin/pip install -i https://pypi.python.org/simple -U --upgrade-strategy eager jupyter"
 # "Custom command using interactive shell (unix)" = "-i vim_upgrade"
 
-"emacs packages" = "-i emacs -l ~/.emacs --batch -f package-upgrade-all"
-#"cpan" = "-i cpan-outdated -p | cpanm"
-"yt-dlp nightly" = "-i ~/bin/yt-dlp-nightly --update-to nightly"
+"yt-dlp static"         = "-i ~/bin/yt-dlp_static --ignore-config -U"
+"emacs packages" = "-i /opt/homebrew/bin/emacs -l ~/.emacs --batch -f package-upgrade-all"
 
 [python]
 # enable_pip_review = true                         ###disabled by default
@@ -123,7 +122,7 @@ notify_each_step = true
 # For the BrewCask step
 # If `Repo Cask Upgrade` exists, then use the `-a` option.
 # Otherwise, use the `--greedy` option.
-# greedy_cask = true
+greedy_cask = true
 
 # For the BrewCask step
 # If `Repo Cask Upgrade` does not exist, then use the `--greedy_latest` option.
@@ -202,7 +201,8 @@ max_concurrency = 5
 
 # Additional git repositories to pull#
 repos = [
-      "~/src/plan9port/",
+	"~/9",
+	"~/src/uemacs",
 ]
 
 # Don't pull the predefined git repos
@@ -210,26 +210,6 @@ repos = [
 
 # Arguments to pass Git when pulling Repositories
 # arguments = "--rebase --autostash"
-
-
-[windows]
-# Manually select Windows updates
-# accept_all_updates = false
-
-# open_remotes_in_new_terminal = true
-
-# wsl_update_pre_release = true
-
-# wsl_update_use_web_download = true
-
-# The default for winget_install_silently is true, 
-# this example turns off silent install.
-# winget_install_silently = false
-
-# Causes Topgrade to rename itself during the run to allow package managers
-# to upgrade it. Use this only if you installed Topgrade by using a package
-# manager such as Scoop or Cargo
-# self_rename = true
 
 
 [npm]
