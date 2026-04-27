@@ -12,7 +12,7 @@
 ;; global keys:
 (global-set-key (kbd "<f1>") 'woman)
 (global-set-key (kbd "<f5>") 'compile)
-(global-set-key (kbd "M-g") 'goto-line)
+(global-set-key (kbd "C-c l") 'goto-line)
 (global-set-key (kbd "C-h") 'backward-delete-char-untabify)
 (global-set-key (kbd "C-x M-a") 'acme-mouse-mode) ;; defined below
 (global-set-key (kbd "C-x M-t") 'transient-mark-mode)
