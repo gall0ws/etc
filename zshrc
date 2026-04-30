@@ -1,13 +1,12 @@
 ## hey emacs, this is an -*-sh-*- file!
-
 PS1='; '
 PS2=' '
-PATH=$HOME/bin:$PATH
+PATH=$HOME/bin:$PATH:/opt/homebrew/sbin
 MANPATH=$HOME/man:
 WORDCHARS='*?_-.[]~=&;!#$%^(){}<>'
 EDITOR="emacsclient -nw"
 ALTERNATE_EDITOR=""
-LESS='-FMR --mouse'
+LESS='-FMRX -x4 --use-color --mouse'
 XDG_CONFIG_HOME=$HOME/.config
 export PS1 PS2 PATH MANPATH WORDCHARS EDITOR ALTERNATE_EDITOR LESS XDG_CONFIG_HOME
 
@@ -25,6 +24,7 @@ alias dequarantine='xattr -r -d com.apple.quarantine'
 alias diff='diff -u'
 alias emacs='emacsclient -nw'
 alias j='jobs'
+alias mtr="sudo mtr"
 alias pstree='pstree -g3 -w'
 alias scrsaver='open /System/Library/CoreServices/ScreenSaverEngine.app'
 
@@ -49,3 +49,6 @@ export PLAN9 PATH
 HOMEBREW_NO_AUTO_UPDATE=1
 HOMEBREW_NO_ENV_HINTS=1
 export HOMEBREW_NO_AUTO_UPDATE HOMEBREW_NO_ENV_HINTS
+
+MTR_OPTIONS="-i 0.5 -o SRDLBAWV"
+export MTR_OPTIONS
