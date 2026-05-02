@@ -2,7 +2,7 @@
 PS1='; '
 PS2=' '
 PATH=$HOME/bin:$PATH:/opt/homebrew/sbin
-MANPATH=$HOME/man:
+MANPATH=$HOME/man:$MANPATH
 WORDCHARS='*?_-.[]~=&;!#$%^(){}<>'
 EDITOR="emacsclient -nw"
 ALTERNATE_EDITOR=""
@@ -10,7 +10,7 @@ LESS='-FMRX -x4 --use-color --mouse'
 XDG_CONFIG_HOME=$HOME/.config
 export PS1 PS2 PATH MANPATH WORDCHARS EDITOR ALTERNATE_EDITOR LESS XDG_CONFIG_HOME
 
-alias ls='lsd --date=relative --group-dirs=first --size=short --git'
+alias ls='lsd --date=relative --group-dirs=first --size=short --git --icon=never'
 alias la='ls -a'
 alias lA='ls -A'
 alias ll='ls -l'
@@ -18,19 +18,25 @@ alias lla='ll -a'
 alias llA='ll -A'
 alias lst='ls --tree'
 
+alias Emacs='/opt/homebrew/bin/emacs -nw'
 alias bootout="sudo launchctl bootout user/`id -u`"
 alias convert='magick'
 alias dequarantine='xattr -r -d com.apple.quarantine'
 alias diff='diff -u'
 alias emacs='emacsclient -nw'
 alias j='jobs'
-alias mtr="sudo mtr"
+alias ldd='otool -L'
 alias pstree='pstree -g3 -w'
 alias scrsaver='open /System/Library/CoreServices/ScreenSaverEngine.app'
 
 if [ "$TERM_PROGRAM" = "iTerm.app"  -a -e "${HOME}/.iterm2_shell_integration.zsh" ]; then
 	source "${HOME}/.iterm2_shell_integration.zsh"
-	export PS1=" "
+        if [ $USER != root ];then
+	    PS1=' '
+        else
+            PS1='# '
+        fi
+        export PS1
 fi
 
 type thefuck >/dev/null && eval $(thefuck --alias)
@@ -50,5 +56,5 @@ HOMEBREW_NO_AUTO_UPDATE=1
 HOMEBREW_NO_ENV_HINTS=1
 export HOMEBREW_NO_AUTO_UPDATE HOMEBREW_NO_ENV_HINTS
 
-MTR_OPTIONS="-i 0.5 -o SRDLBAWV"
+MTR_OPTIONS="-i 0.5 -y 2 -o SRDLBAWV"
 export MTR_OPTIONS
