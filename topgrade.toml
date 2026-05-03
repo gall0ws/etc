@@ -16,7 +16,7 @@ sudo_command = "sudo"
 
 # Disable specific steps - same options as the command line flag
 # disable = ["system", "emacs"]
-disable = [ "containers", "stack" ]
+disable = ["system", "mas", "containers", "stack"]
 
 # Ignore failures for these steps
 # ignore_failures = ["powershell"]
@@ -97,7 +97,7 @@ notify_each_step = true
 # "Python Environment" = "~/dev/.env/bin/pip install -i https://pypi.python.org/simple -U --upgrade-strategy eager jupyter"
 # "Custom command using interactive shell (unix)" = "-i vim_upgrade"
 
-"yt-dlp static"         = "-i ~/bin/yt-dlp_static --ignore-config -U"
+"yt-dlp static"         = "-i ~/bin/yt-dlp_static --ignore-config --update-to nightly"
 "emacs packages" = "-i /opt/homebrew/bin/emacs -l ~/.emacs --batch -f package-upgrade-all"
 
 [python]
