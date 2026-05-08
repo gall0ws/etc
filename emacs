@@ -121,7 +121,10 @@
  '(compile-auto-highlight t)
  '(compile-command "make -s ")
  '(custom-safe-themes
-   '("72ed8b6bffe0bfa8d097810649fd57d2b598deef47c992920aef8b5d9599eefe"
+   '("51fa6edfd6c8a4defc2681e4c438caf24908854c12ea12a1fbfd4d055a9647a3"
+     "8363207a952efb78e917230f5a4d3326b2916c63237c1f61d7e5fe07def8d378"
+     "147093cd93a68c202caa79635399cc5f6a8cd028bb1ca037a4d4a095b28cb167"
+     "72ed8b6bffe0bfa8d097810649fd57d2b598deef47c992920aef8b5d9599eefe"
      "5a0ddbd75929d24f5ef34944d78789c6c3421aa943c15218bac791c199fc897d"
      "6b5c518d1c250a8ce17463b7e435e9e20faa84f3f7defba8b579d4f5925f60c1"
      "d14f3df28603e9517eb8fb7518b662d653b25b26e83bd8e129acea042b774298"
@@ -154,8 +157,9 @@
  '(package-selected-packages
    '(ace-window acme-theme afternoon-theme company exec-path-from-shell
                 folding go-autocomplete go-errcheck go-mode
-                gruvbox-theme magit markdown-mode origami tide
-                typescript-mode web-mode))
+                gruvbox-theme magit markdown-mode origami sudoku
+                swift-mode the-matrix-theme tide typescript-mode
+                web-mode))
  '(query-replace-highlight t)
  '(require-final-newline t)
  '(safe-local-variable-values '((indent . 8)))
