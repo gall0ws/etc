@@ -17,7 +17,7 @@ fi
 
 type lsd >/dev/null && {
     alias ls='lsd --date=relative --group-dirs=first --size=short --git --icon=never --permission=octal'
-    alias lst='lsd --tree'
+    alias lst='ls --tree'
 }
 alias la='ls -a'
 alias lA='ls -A'
