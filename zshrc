@@ -33,7 +33,7 @@ alias Emacs='/opt/homebrew/bin/emacs -nw'
 alias emacs='emacsclient -nw'
 alias j='jobs'
 alias ldd='otool -L'
-alias pstree='pstree -g3 -w'
+alias pstree='ps -axo user,pid,ppid,pgid,start,command | pstree -wg3 -f-'
 alias scrsaver='open /System/Library/CoreServices/ScreenSaverEngine.app'
 alias watch='watch -pt -n1'
 
