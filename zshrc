@@ -49,12 +49,16 @@ fi
 
 type thefuck >/dev/null && eval $(thefuck --alias)
 
-PATH="/Users/gall0ws/perl5/bin${PATH:+:${PATH}}"
-PERL5LIB="/Users/gall0ws/perl5/lib/perl5${PERL5LIB:+:${PERL5LIB}}"
-PERL_LOCAL_LIB_ROOT="/Users/gall0ws/perl5${PERL_LOCAL_LIB_ROOT:+:${PERL_LOCAL_LIB_ROOT}}"
-PERL_MB_OPT="--install_base \"/Users/gall0ws/perl5\""
-PERL_MM_OPT="INSTALL_BASE=/Users/gall0ws/perl5"
+PATH="$PATH:${HOME}/perl5/bin"
+PERL5LIB="${HOME}/perl5/lib/perl5${PERL5LIB:+:${PERL5LIB}}"
+PERL_LOCAL_LIB_ROOT="${HOME}/perl5${PERL_LOCAL_LIB_ROOT:+:${PERL_LOCAL_LIB_ROOT}}"
+PERL_MB_OPT="--install_base \"${HOME}/perl5\""
+PERL_MM_OPT="INSTALL_BASE=${HOME}/perl5"
 export PATH PERL5LIB PERL_LOCAL_LIB_ROOT PERL_MB_OPT PERL_MM_OPT
+
+PYTHON_VERSION=3.9
+PATH="${PATH}:${HOME}/Library/Python/${PYTHON_VERSION}/bin"
+export PATH
 
 PLAN9="$HOME/9"
 PATH="$PATH:$PLAN9/bin"
