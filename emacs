@@ -157,9 +157,9 @@
  '(package-selected-packages
    '(ace-window acme-theme afternoon-theme company exec-path-from-shell
                 folding go-autocomplete go-errcheck go-mode
-                gruvbox-theme magit markdown-mode origami sudoku
-                swift-mode the-matrix-theme tide typescript-mode
-                web-mode))
+                gruvbox-theme lua-mode magit markdown-mode origami
+                sudoku swift-mode the-matrix-theme tide
+                typescript-mode web-mode))
  '(query-replace-highlight t)
  '(require-final-newline t)
  '(safe-local-variable-values '((indent . 8)))
