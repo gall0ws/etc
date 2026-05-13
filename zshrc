@@ -15,6 +15,8 @@ if [ -x $HOME/bin/lesspipe ]; then
     export LESSOPEN='|lesspipe %s'
 fi
 
+setopt NO_NOMATCH
+
 type lsd >/dev/null && {
     alias ls='lsd --date=relative --group-dirs=first --size=short --git --icon=never --permission=octal'
     alias lst='ls --tree'
