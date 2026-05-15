@@ -82,3 +82,9 @@ function ccat () {
     mode=$(if darkmode; then echo dark; else echo light; fi)
     /opt/homebrew/bin/ccat --bg=$mode --color=always $@
 }
+
+function get_safari_cookies () {
+    fmt=${1-netscape} # json|ascii|netscape
+    bcparser --output $fmt \
+      ${HOME}/Library/Containers/com.apple.Safari/Data/Library/Cookies/Cookies.binarycookies
+}
