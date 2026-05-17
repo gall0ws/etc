@@ -10,16 +10,12 @@
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
 
 ;; global keys:
-(global-set-key (kbd "<f1>") 'woman)
-(global-set-key (kbd "<f5>") 'compile)
+(global-set-key (kbd "C-c b") 'compile)
+(global-set-key (kbd "C-c c") 'chomp)
 (global-set-key (kbd "C-c l") 'goto-line)
+(global-set-key (kbd "C-c m") 'man)
 (global-set-key (kbd "C-h") 'backward-delete-char-untabify)
-(global-set-key (kbd "C-x M-a") 'acme-mouse-mode) ;; defined below
 (global-set-key (kbd "C-x M-t") 'transient-mark-mode)
-(global-set-key (kbd "M-o") 'ace-window)
-
-(when (memq window-system '(ns x))
-  (exec-path-from-shell-initialize))
 
 ;; frame default settings:
 (setq default-frame-alist
@@ -28,9 +24,7 @@
 
 (setq initial-frame-alist default-frame-alist)
 
-
 ;; eshell
-
 (defun eshell-clear-buffer ()
   "Clear terminal"
   (interactive)
@@ -41,17 +35,6 @@
 (add-hook 'eshell-mode-hook
           '(lambda()
              (local-set-key (kbd "C-l") 'eshell-clear-buffer)))
-
-(let ((acme-el "~/.emacs.d/downloaded/acme-mouse/acme-mouse.el"))
-  (when (file-exists-p acme-el)
-    (progn
-      (load acme-el)
-      (require 'acme-mouse)
-      (define-global-minor-mode acme-global-mouse-mode 
-	acme-mouse-mode
-	(lambda () (acme-mouse-mode t)))
-      (acme-global-mouse-mode))))
-
 
 ;; typescript stuff
 (use-package typescript-mode
@@ -76,7 +59,6 @@
   :ensure t
   :config
   (add-hook 'typescript-mode-hook 'flycheck-mode))
-
 
 ;; backups:
 (setq make-backup-files nil
@@ -121,7 +103,9 @@
  '(compile-auto-highlight t)
  '(compile-command "make -s ")
  '(custom-safe-themes
-   '("51fa6edfd6c8a4defc2681e4c438caf24908854c12ea12a1fbfd4d055a9647a3"
+   '("d8011e6c2919f4edfbc233664d9e404e2a2b89483bc8b75011b379c41a82efdf"
+     "deb645f30fd25191b6e8d0f397cc1dd172a352f22094747be2ff527394cc9f57"
+     "51fa6edfd6c8a4defc2681e4c438caf24908854c12ea12a1fbfd4d055a9647a3"
      "8363207a952efb78e917230f5a4d3326b2916c63237c1f61d7e5fe07def8d378"
      "147093cd93a68c202caa79635399cc5f6a8cd028bb1ca037a4d4a095b28cb167"
      "72ed8b6bffe0bfa8d097810649fd57d2b598deef47c992920aef8b5d9599eefe"
@@ -157,9 +141,10 @@
  '(package-selected-packages
    '(ace-window acme-theme afternoon-theme company exec-path-from-shell
                 folding go-autocomplete go-errcheck go-mode
-                gruvbox-theme lua-mode magit markdown-mode origami
-                sudoku swift-mode the-matrix-theme tide
-                typescript-mode web-mode))
+                gruvbox-theme lua-mode magit markdown-mode
+                ns-auto-titlebar origami plan9-theme sudoku swift-mode
+                the-matrix-theme tide timu-macos-theme typescript-mode
+                web-mode))
  '(query-replace-highlight t)
  '(require-final-newline t)
  '(safe-local-variable-values '((indent . 8)))
@@ -194,11 +179,15 @@
   (message buffer-file-name))
 
 (if (memq window-system '(ns x))
-    (load-theme 'gruvbox-dark-medium)
+    (progn
+      (load-theme 'gruvbox-dark-hard)
+      (exec-path-from-shell-initialize)
+      (when (eq system-type 'darwin)
+        (ns-auto-titlebar-mode)))
     (xterm-mouse-mode))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:family "Anonymous Pro" :foundry "nil" :slant normal :weight regular :height 160 :width normal)))))
+ '(default ((t (:family "Anonymous Pro" :foundry "nil" :slant normal :weight regular :height 140 :width normal)))))
