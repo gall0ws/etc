@@ -17,6 +17,11 @@
 (global-set-key (kbd "C-h") 'backward-delete-char-untabify)
 (global-set-key (kbd "C-x M-t") 'transient-mark-mode)
 
+(add-hook 'go-mode-hook
+	  (lambda ()
+	    (local-set-key (kbd "C-c d") 'godoc)
+	    (local-set-key (kbd "C-c f") 'gofmt)))
+
 ;; frame default settings:
 (setq default-frame-alist
       (list
@@ -33,8 +38,8 @@
     (eshell-send-input)))
 
 (add-hook 'eshell-mode-hook
-          '(lambda()
-             (local-set-key (kbd "C-l") 'eshell-clear-buffer)))
+          (lambda ()
+            (local-set-key (kbd "C-l") 'eshell-clear-buffer)))
 
 ;; typescript stuff
 (use-package typescript-mode
@@ -72,8 +77,6 @@
 ;; misc:
 (if (not (display-graphic-p))
     (menu-bar-mode -1))
-(tool-bar-mode -1)
-(blink-cursor-mode -1)
 (windmove-default-keybindings 'shift)
 (put 'dired-find-alternate-file 'disabled nil)
 (setq ns-right-alternate-modifier 'none)
@@ -130,7 +133,7 @@
  '(focus-follows-mouse t)
  '(hanoi-use-faces nil)
  '(hourglass-delay 0)
- '(indent-tabs-mode nil)
+ '(indent-tabs-mode t)
  '(inhibit-startup-screen t)
  '(js-indent-level 4)
  '(line-spacing 2)
@@ -154,9 +157,10 @@
  '(tool-bar-mode nil))
 
 ;; funcs
-(defun infer-indentation-style ()
+(defun infer-indentation-style (&optional start end)
   "Set current buffer's indent-tabs-mode guessing the style used"
-  (interactive)
+  (interactive
+   (and (use-region-p) (list (region-beginning) (region-end))))
   (setq-local indent-tabs-mode (>= (how-many "^\t" (point-min) (point-max))
 				   (how-many "^  " (point-min) (point-max)))))
 
