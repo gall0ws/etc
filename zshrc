@@ -1,7 +1,25 @@
 ## hey emacs, this is an -*-sh-*- file!
+
+PATH=$(cat <<END | tr '\n' :
+.
+$HOME/bin
+$HOME/go/bin
+/opt/homebrew/bin
+/opt/homebrew/sbin
+/usr/local/bin
+/usr/bin
+/bin
+/usr/local/sbin
+/usr/sbin
+/sbin
+/Library/Apple/usr/bin
+/System/Cryptexes/App/usr/bin
+END
+)
+export PATH=${PATH%?}
+
 PS1='; '
 PS2=' '
-PATH=.:$HOME/bin:$PATH:/opt/homebrew/sbin
 HISTORY_IGNORE=' *'
 MANPATH=$HOME/man:$MANPATH
 WORDCHARS='*?_-.[]~=&;!#$%^(){}<>'
@@ -9,7 +27,7 @@ EDITOR='emacsclient -nw'
 ALTERNATE_EDITOR=''
 LESS='-FMRX -x4 --use-color --mouse'
 XDG_CONFIG_HOME=$HOME/.config
-export PS1 PS2 PATH HISTORY_IGNORE MANPATH WORDCHARS EDITOR ALTERNATE_EDITOR LESS XDG_CONFIG_HOME
+export PS1 PS2 HISTORY_IGNORE MANPATH WORDCHARS EDITOR ALTERNATE_EDITOR LESS XDG_CONFIG_HOME
 
 if [ -x $HOME/bin/lesspipe ]; then
     export LESSOPEN='|lesspipe %s'
