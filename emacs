@@ -14,8 +14,9 @@
 (global-set-key (kbd "C-c c") 'chomp)
 (global-set-key (kbd "C-c l") 'goto-line)
 (global-set-key (kbd "C-c m") 'man)
+(global-set-key (kbd "C-c r") 'reread-buffer)
+(global-set-key (kbd "C-c t") 'transient-mark-mode)
 (global-set-key (kbd "C-h") 'backward-delete-char-untabify)
-(global-set-key (kbd "C-x M-t") 'transient-mark-mode)
 
 (add-hook 'go-mode-hook
 	  (lambda ()
@@ -177,10 +178,10 @@
   (replace-regexp "[“”]" "\"" nil start end)
   (replace-regexp "[‘’]" "'" nil start end))
 
-(defun show-file-name ()
-  "Show current buffer file name in the minibuffer"
+(defun reread-buffer ()
+  "Reload buffer"
   (interactive)
-  (message buffer-file-name))
+  (find-file buffer-file-name))
 
 (if (memq window-system '(ns x))
     (progn
