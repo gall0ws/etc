@@ -4,6 +4,7 @@ PATH=$(cat <<END | tr '\n' :
 .
 $HOME/bin
 $HOME/go/bin
+$HOME/.local/bin
 /opt/homebrew/bin
 /opt/homebrew/sbin
 /usr/local/bin
@@ -19,9 +20,9 @@ END
 export PATH=${PATH%?}
 
 PS1='; '
-PS2=' '
+PS2='  '
 HISTORY_IGNORE=' *'
-MANPATH=$HOME/man:$MANPATH
+MANPATH=$HOME/man:
 WORDCHARS='*?_-.[]~=&;!#$%^(){}<>'
 EDITOR='emacsclient -nw'
 ALTERNATE_EDITOR=''
@@ -29,10 +30,20 @@ LESS='-FMRX -x4 --use-color --mouse'
 XDG_CONFIG_HOME=$HOME/.config
 export PS1 PS2 HISTORY_IGNORE MANPATH WORDCHARS EDITOR ALTERNATE_EDITOR LESS XDG_CONFIG_HOME
 
+if [ $USER = root ]; then
+    export PS1='# '
+fi
+
 if [ -x $HOME/bin/lesspipe ]; then
     export LESSOPEN='|lesspipe %s'
 fi
 
+if [ "$TERM_PROGRAM" = "iTerm.app" ] && [ -e "${HOME}/.iterm2_shell_integration.zsh" ]; then
+    source "${HOME}/.iterm2_shell_integration.zsh"
+fi
+
+setopt AUTO_MENU
+setopt LIST_TYPES
 setopt NO_NOMATCH
 
 type lsd >/dev/null && {
@@ -57,16 +68,6 @@ alias ping='ping -i.5 -a'
 alias pstree='ps -axo user,pid,ppid,pgid,start,command | pstree -wg3 -f-'
 alias scrsaver='open /System/Library/CoreServices/ScreenSaverEngine.app'
 alias watch='watch -pt -n1'
-
-if [ "$TERM_PROGRAM" = "iTerm.app" ] && [ -e "${HOME}/.iterm2_shell_integration.zsh" ]; then
-    source "${HOME}/.iterm2_shell_integration.zsh"
-    if [ $USER != root ];then
-        PS1=' '
-    else
-        PS1='# '
-    fi
-    export PS1
-fi
 
 type thefuck >/dev/null && eval $(thefuck --alias)
 
@@ -101,10 +102,4 @@ function darkmode () {
 function ccat () {
     mode=$(if darkmode; then echo dark; else echo light; fi)
     /opt/homebrew/bin/ccat --bg=$mode --color=always $@
-}
-
-function get_safari_cookies () {
-    fmt=${1-netscape} # json|ascii|netscape
-    bcparser --output $fmt \
-      ${HOME}/Library/Containers/com.apple.Safari/Data/Library/Cookies/Cookies.binarycookies
 }
