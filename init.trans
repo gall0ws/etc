@@ -1,0 +1,12 @@
+{
+        :show-original                  false
+        :show-original-phonetics:       false
+        :show-translation-phonetics:    false
+        :show-prompt-message:           false
+        :verbose                        false
+        :engine                         "google"
+        :voice                          "female"
+        :player                         "mpv --profile=audio"
+        :hl                             "en"
+        :tl                             ["en" "it"]
+}
