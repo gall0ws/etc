@@ -22,7 +22,7 @@ export PATH=${PATH%?}
 PS1='; '
 PS2='  '
 HISTORY_IGNORE=' *'
-MANPATH=$HOME/man:
+MANPATH=:$HOME/man:$HOME/.local/share/man
 WORDCHARS='*?_-.[]~=&;!#$%^(){}<>'
 EDITOR='emacsclient -nw'
 ALTERNATE_EDITOR=''
