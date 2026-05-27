@@ -51,7 +51,7 @@ if [ "$TERM_PROGRAM" = "iTerm.app" ] && [ -e "${HOME}/.iterm2_shell_integration.
 fi
 
 type lsd >/dev/null && {
-    alias ls='lsd --date=relative --group-dirs=first --size=short --git --icon=never --permission=octal'
+    alias ls='lsd --config-file=$HOME/etc/lsd.yaml'
     alias lst='ls --tree'
 }
 alias la='ls -a'

@@ -1,0 +1,17 @@
+## Note: canonical path for this file is: $XDG_CONFIG_HOME/lsd/config.yaml
+blocks:
+    - permission
+    - user
+    - group
+    - size
+    - date
+    - git
+    - name
+date: relative
+no-symlink: true
+icons:
+    when: never
+size: short
+sorting:
+    dir-grouping: first
+permission: octal
