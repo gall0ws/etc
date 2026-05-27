@@ -1,87 +1,132 @@
 ;; hey emacs, this is your -*- lisp -*- configuration file!
 
-;; Added by Package.el.  This must come before configurations of
-;; installed packages.  Don't delete this line.  If you don't want it,
-;; just comment it out by adding a semicolon to the start of the line.
-;; You may delete these explanatory comments.
-(package-initialize)
+;;;; default frame settings
+(add-to-list 'initial-frame-alist '(vertical-scroll-bars . nil))
 
+;;;; packages stuff
+(package-initialize)
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
 
-;; global keys:
+;;;; globals
+(global-company-mode)
 (global-set-key (kbd "C-c b") 'compile)
 (global-set-key (kbd "C-c c") 'chomp)
 (global-set-key (kbd "C-c l") 'goto-line)
 (global-set-key (kbd "C-c m") 'man)
 (global-set-key (kbd "C-c r") 'reread-buffer)
 (global-set-key (kbd "C-c t") 'transient-mark-mode)
-(global-set-key (kbd "C-h") 'backward-delete-char-untabify)
+(global-set-key (kbd "C-h")   'backward-delete-char-untabify)
 
-(add-hook 'go-mode-hook
-	  (lambda ()
-	    (local-set-key (kbd "C-c d") 'godoc)
-	    (local-set-key (kbd "C-c f") 'gofmt)))
+;;;; hooks
+;; note: for `add-hook' it’s recommended to use a function symbol and
+;; not a lambda form.  Using a symbol will ensure that the function is
+;; not re-added if the function is edited, and using lambda forms may
+;; also have a negative performance impact when running `add-hook' and
+;; `remove-hook'.
+(defun hooks/c-mode ()
+  (local-add-hook 'before-save-hook 'chomp)
+  (flycheck-mode))
 
-;; frame default settings:
-(setq default-frame-alist
-      (list
-       '(vertical-scroll-bars . nil)))
+(defun hooks/go-mode ()
+  (local-add-hook 'before-save-hook 'gofmt)
+  (setq-local compile-command "go build ")
+  (local-set-key (kbd "C-c d") 'godoc)
+  (local-set-key (kbd "C-c f") 'gofmt))
 
-(setq initial-frame-alist default-frame-alist)
+(defun hooks/lisp-mode ()
+  (local-add-hook 'before-save-hook 'chomp))
 
-;; eshell
+(defun hooks/eshell-mode ()
+  (local-set-key (kbd "C-l") 'eshell-clear-buffer))
+
+(add-hook 'c-mode-hook		'hooks/c-mode)
+(add-hook 'go-mode-hook		'hooks/go-mode)
+(add-hook 'lisp-mode-hook	'hooks/lisp-mode)
+(add-hook 'eshell-mode-hook	'hooks/eshell-mode)
+
+;;;; window-system
+(when (eq window-system 'ns)
+  (defun ns/apply-theme (appearance)
+    (mapc 'disable-theme custom-enabled-themes)
+    (pcase appearance
+      ('light (load-theme 'modus-operandi t))
+      ('dark  (load-theme 'modus-vivendi  t))))
+  (add-hook 'ns-system-appearance-change-functions 'ns/apply-theme)
+  (ns-auto-titlebar-mode)
+  (menu-bar-mode t))
+
+(when (eq window-system 'x)
+  (load-theme gruvbox-dark-hard t)
+  (menu-bar-mode -1))
+
+(if (eq window-system nil)
+    (progn
+      (xterm-mouse-mode)
+      (menu-bar-mode -1))
+    (fancy-startup-screen))
+
+;;;; misc
+(exec-path-from-shell-initialize)
+(windmove-default-keybindings 'shift)
+(put 'dired-find-alternate-file 'disabled nil)
+(put 'add-hook 'lisp-indent-function 1)
+
+;;;; funcs
+(defun local-add-hook (hook function &optional depth)
+  "Local version of `add-hook'."
+  (add-hook hook function depth t))
+
+(defun infer-indentation-style ()
+  "Set current buffer's indent-tabs-mode guessing the style in use."
+  (interactive)
+  (setq-local indent-tabs-mode (>= (how-many "^\t" (point-min) (point-max))
+				   (how-many "^  " (point-min) (point-max)))))
+
+(defun chomp (&optional start end)
+  "Remove trailing whitespaces."
+  (interactive
+   (when (use-region-p) (list (region-beginning) (region-end))))
+  (unless (numberp start) (setq start (point-min)))
+  (unless (numberp end) (setq end (point-max)))
+  (let ((cur-point (point)))
+    (goto-char start)
+    (while (re-search-forward "[ \t]+$" end t)
+      (replace-match ""))
+    (goto-char cur-point)))
+
+(defun fixup-smart-quotes (&optional start end)
+  "Replace “smart” quotes with dumb ones."
+  (interactive
+   (when (use-region-p) (list (region-beginning) (region-end))))
+  (unless (numberp start) (setq start (point-min)))
+  (unless (numberp end) (setq end (point-max)))
+  (replace-regexp "[“”]" "\"" nil start end)
+  (replace-regexp "[‘’]" "'" nil start end))
+
+(defun reread-buffer ()
+  "Reload buffer."
+  (interactive)
+  (find-file buffer-file-name))
+
+(defun find-file-sudo (filename)
+  "Find file using sudo."
+  (interactive "FFind file: ")
+  (find-file (concat "/sudo::" filename)))
+
+(defun find-file-ssh (machine filename)
+  "Find file over ssh."
+  (interactive "MMachine: \nFFile: ")
+  (find-file (concat "/ssh:" machine ":" filename)))
+
 (defun eshell-clear-buffer ()
-  "Clear terminal"
+  "Clear eshell buffer."
   (interactive)
   (let ((inhibit-read-only t))
     (erase-buffer)
     (eshell-send-input)))
 
-(add-hook 'eshell-mode-hook
-          (lambda ()
-            (local-set-key (kbd "C-l") 'eshell-clear-buffer)))
-
-;; typescript stuff
-(use-package typescript-mode
-	     :ensure t
-	     :mode (("\\.tsx\\'" . typescript-mode))
-	     :config
-	     (setq indent-tabs-mode nil))
-
-(use-package tide
-  :init
-  :ensure t
-  :after (typescript-mode company flycheck)
-  :config
-  (add-hook 'typescript-mode-hook 'tide-setup))
-
-(use-package company
-  :ensure t
-  :config
-  (global-company-mode))
-
-(use-package flycheck
-  :ensure t
-  :config
-  (add-hook 'typescript-mode-hook 'flycheck-mode))
-
-;; backups:
-(setq make-backup-files nil
-      backup-by-copying t
-      backup-directory-alist '(("." . "~/.emacs-backup"))
-      version-control t
-      kept-new-versions 2
-      kept-old-versions 5
-      delete-old-versions t)
-
-;; misc:
-(if (not (display-graphic-p))
-    (menu-bar-mode -1))
-(windmove-default-keybindings 'shift)
-(put 'dired-find-alternate-file 'disabled nil)
-(setq ns-right-alternate-modifier 'none)
-
+;;;; custom zone
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -107,7 +152,10 @@
  '(compile-auto-highlight t)
  '(compile-command "make -s ")
  '(custom-safe-themes
-   '("d8011e6c2919f4edfbc233664d9e404e2a2b89483bc8b75011b379c41a82efdf"
+   '("d5fd482fcb0fe42e849caba275a01d4925e422963d1cd165565b31d3f4189c87"
+     "5aedf993c7220cbbe66a410334239521d8ba91e1815f6ebde59cecc2355d7757"
+     "18a1d83b4e16993189749494d75e6adb0e15452c80c431aca4a867bcc8890ca9"
+     "d8011e6c2919f4edfbc233664d9e404e2a2b89483bc8b75011b379c41a82efdf"
      "deb645f30fd25191b6e8d0f397cc1dd172a352f22094747be2ff527394cc9f57"
      "51fa6edfd6c8a4defc2681e4c438caf24908854c12ea12a1fbfd4d055a9647a3"
      "8363207a952efb78e917230f5a4d3326b2916c63237c1f61d7e5fe07def8d378"
@@ -125,14 +173,13 @@
      "b89ae2d35d2e18e4286c8be8aaecb41022c1a306070f64a66fd114310ade88aa"
      default))
  '(default-truncate-lines nil t)
- '(display-hourglass nil)
+ '(display-hourglass t)
  '(display-time-24hr-format t)
  '(display-time-default-load-average nil)
  '(electric-indent-mode nil)
  '(explicit-shell-file-name nil)
  '(face-font-family-alternatives nil)
  '(focus-follows-mouse t)
- '(hanoi-use-faces nil)
  '(hourglass-delay 0)
  '(indent-tabs-mode t)
  '(inhibit-startup-screen t)
@@ -141,58 +188,26 @@
  '(mouse-autoselect-window t)
  '(mouse-drag-and-drop-region 'meta)
  '(next-line-add-newlines nil)
+ '(ns-pop-up-frames nil)
+ '(ns-right-alternate-modifier 'none)
  '(objc-font-lock-extra-types nil)
  '(package-selected-packages
    '(ace-window acme-theme afternoon-theme company exec-path-from-shell
-                folding go-autocomplete go-errcheck go-mode
-                gruvbox-theme lua-mode magit markdown-mode
-                ns-auto-titlebar origami plan9-theme sudoku swift-mode
-                the-matrix-theme tide timu-macos-theme typescript-mode
-                web-mode))
+     folding go-mode gruvbox-theme lua-mode magit
+     markdown-mode ns-auto-titlebar origami plan9-theme
+     sudoku swift-mode the-matrix-theme tide
+     timu-macos-theme typescript-mode web-mode))
  '(query-replace-highlight t)
  '(require-final-newline t)
- '(safe-local-variable-values '((indent . 8)))
  '(slime-kill-without-query-p t)
  '(slime-net-coding-system 'utf-8-unix)
  '(term-suppress-hard-newline t)
  '(tool-bar-mode nil))
 
-;; funcs
-(defun infer-indentation-style (&optional start end)
-  "Set current buffer's indent-tabs-mode guessing the style used"
-  (interactive
-   (and (use-region-p) (list (region-beginning) (region-end))))
-  (setq-local indent-tabs-mode (>= (how-many "^\t" (point-min) (point-max))
-				   (how-many "^  " (point-min) (point-max)))))
-
-(defun chomp (&optional start end)
-  "Remove trailing whitespaces"
-  (interactive
-   (and (use-region-p) (list (region-beginning) (region-end))))
-  (replace-regexp "[ 	]+$" ""))
-
-(defun fixup-smart-quotes (&optional start end)
-  "Replace “smart” quotes with dumb ones."
-  (interactive
-   (and (use-region-p) (list (region-beginning) (region-end))))
-  (replace-regexp "[“”]" "\"" nil start end)
-  (replace-regexp "[‘’]" "'" nil start end))
-
-(defun reread-buffer ()
-  "Reload buffer"
-  (interactive)
-  (find-file buffer-file-name))
-
-(if (memq window-system '(ns x))
-    (progn
-      (load-theme 'gruvbox-dark-hard)
-      (exec-path-from-shell-initialize)
-      (when (eq system-type 'darwin)
-        (ns-auto-titlebar-mode)))
-    (xterm-mouse-mode))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:family "Anonymous Pro" :foundry "nil" :slant normal :weight regular :height 140 :width normal)))))
+ '(default ((t (:family "Anonymous Pro" :foundry "nil" :slant normal :weight regular :height 140 :width normal))))
+ '(ns-working-text-face ((t (:background "gold2" :foreground "black")))))
