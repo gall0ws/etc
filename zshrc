@@ -9,7 +9,7 @@ setopt INTERACTIVE_COMMENTS
 setopt IGNORE_EOF
 setopt LIST_TYPES
 
-PATH=$(cat <<END | tr '\n' :
+PATH=$(/bin/cat <<END | /usr/bin/tr '\n' :
 .
 $HOME/bin
 $HOME/go/bin
