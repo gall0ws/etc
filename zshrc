@@ -1,5 +1,14 @@
 ## hey emacs, this is an -*-sh-*- file!
 
+setopt AUTO_MENU
+setopt NO_LIST_BEEP
+setopt NO_NOMATCH
+setopt HIST_IGNORE_SPACE
+setopt HIST_IGNORE_DUPS
+setopt INTERACTIVE_COMMENTS
+setopt IGNORE_EOF
+setopt LIST_TYPES
+
 PATH=$(cat <<END | tr '\n' :
 .
 $HOME/bin
@@ -21,9 +30,8 @@ export PATH=${PATH%?}
 
 PS1='; '
 PS2='  '
-HISTORY_IGNORE=' *'
-MANPATH=:$HOME/man:$HOME/.local/share/man
-WORDCHARS='*?_-.[]~=&;!#$%^(){}<>'
+MANPATH=$HOME/man:$HOME/.local/share/man:       # trailing ':' is not a typo.
+WORDCHARS='*?_-[]~=&;!#$%^(){}<>'
 EDITOR='emacsclient -nw'
 ALTERNATE_EDITOR=''
 LESS='-FMRX -x4 --use-color --mouse'
@@ -41,10 +49,6 @@ fi
 if [ "$TERM_PROGRAM" = "iTerm.app" ] && [ -e "${HOME}/.iterm2_shell_integration.zsh" ]; then
     source "${HOME}/.iterm2_shell_integration.zsh"
 fi
-
-setopt AUTO_MENU
-setopt LIST_TYPES
-setopt NO_NOMATCH
 
 type lsd >/dev/null && {
     alias ls='lsd --date=relative --group-dirs=first --size=short --git --icon=never --permission=octal'
