@@ -132,6 +132,8 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(Custom-mode-hook '(mixed-pitch-mode))
+ '(Info-selection-hook '(mixed-pitch-mode))
  '(ansi-color-faces-vector
    [default default default italic underline success warning error])
  '(blink-cursor-mode nil)
@@ -180,11 +182,14 @@
  '(explicit-shell-file-name nil)
  '(face-font-family-alternatives nil)
  '(focus-follows-mouse t)
+ '(help-mode-hook '(mixed-pitch-mode))
  '(hourglass-delay 0)
  '(indent-tabs-mode t)
  '(inhibit-startup-screen t)
+ '(initial-scratch-message nil)
  '(js-indent-level 4)
  '(line-spacing 2)
+ '(mixed-pitch-variable-pitch-cursor 'box)
  '(mouse-autoselect-window t)
  '(mouse-drag-and-drop-region 'meta)
  '(next-line-add-newlines nil)
@@ -194,8 +199,8 @@
  '(package-selected-packages
    '(ace-window acme-theme afternoon-theme company exec-path-from-shell
      folding go-mode gruvbox-theme lua-mode magit
-     markdown-mode ns-auto-titlebar origami plan9-theme
-     sudoku swift-mode the-matrix-theme tide
+     markdown-mode mixed-pitch ns-auto-titlebar origami
+     plan9-theme sudoku swift-mode the-matrix-theme tide
      timu-macos-theme typescript-mode web-mode))
  '(query-replace-highlight t)
  '(require-final-newline t)
@@ -210,4 +215,5 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(default ((t (:family "Anonymous Pro" :foundry "nil" :slant normal :weight regular :height 140 :width normal))))
- '(ns-working-text-face ((t (:background "gold2" :foreground "black")))))
+ '(ns-working-text-face ((t (:background "gold2" :foreground "black"))))
+ '(variable-pitch ((t (:family "SF Pro")))))
