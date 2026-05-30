@@ -1,22 +1,109 @@
 ;; hey emacs, this is your -*- lisp -*- configuration file!
 
+;;;; load my libraries (ref. https://github.com/gall0ws/elisp)
+(let ((load-prefer-newer t))
+  (mapc
+   (lambda (lib)
+     (load (file-name-concat "~/lib/elisp" lib)))
+   '("exec" "misc")))
+
 ;;;; default frame settings
 (add-to-list 'initial-frame-alist '(vertical-scroll-bars . nil))
 
 ;;;; packages stuff
 (package-initialize)
-(require 'package)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
 
 ;;;; globals
+(display-battery-mode)
 (global-company-mode)
+(pixel-scroll-mode)
+
+;;;; bindings
+;; misc:
+(global-set-key (kbd "C-h") 'backward-delete-char-untabify)
+(global-set-key (kbd "s-x") 'execute-extended-command)
+(global-set-key (kbd "s-<") 'exec<)
+(global-set-key (kbd "s->") 'exec>)
+(global-set-key (kbd "s-|") 'exec|)
+(global-set-key (kbd "s-?") 'describe-prefix-bindings)
+
+;; basics: C-c
 (global-set-key (kbd "C-c b") 'compile)
-(global-set-key (kbd "C-c c") 'chomp)
+(global-set-key (kbd "C-c c") 'comment-region)
+(global-set-key (kbd "C-c C") 'chomp)
+(global-set-key (kbd "C-c E") 'eshell)
 (global-set-key (kbd "C-c l") 'goto-line)
 (global-set-key (kbd "C-c m") 'man)
+(global-set-key (kbd "C-c o") 'ace-window)
 (global-set-key (kbd "C-c r") 'reread-buffer)
 (global-set-key (kbd "C-c t") 'transient-mark-mode)
-(global-set-key (kbd "C-h")   'backward-delete-char-untabify)
+(global-set-key (kbd "C-c ?") 'describe-prefix-bindings)
+
+;; eval: C-c e
+(global-set-key (kbd "C-c e b") 'eval-buffer)
+(global-set-key (kbd "C-c e e") 'eval-last-sexp)
+(global-set-key (kbd "C-c e f") 'eval-defun)
+(global-set-key (kbd "C-c e p") 'eval-print-last-sexp)
+(global-set-key (kbd "C-c e r") 'eval-region)
+(global-set-key (kbd "C-c e x") 'eval-expression)
+(global-set-key (kbd "C-c e ?") 'describe-prefix-bindings)
+
+;; fill: C-c f
+(global-set-key (kbd "C-c f i") 'fill-individual-paragraphs)
+(global-set-key (kbd "C-c f n") 'fill-nonuniform-paragraphs)
+(global-set-key (kbd "C-c f p") 'fill-paragraph)
+(global-set-key (kbd "C-c f r") 'fill-region)
+(global-set-key (kbd "C-c f R") 'fill-region-as-paragraph)
+(global-set-key (kbd "C-c f ?") 'describe-prefix-bindings)
+
+;; help/doc: C-c h (mostly translates native C-h prefix)
+(global-set-key (kbd "C-c h a") 'apropos)
+(global-set-key (kbd "C-c h b") 'describe-bindings)
+(global-set-key (kbd "C-c h c") 'describe-key-briefly)
+(global-set-key (kbd "C-c h d") 'apropos-documentation)
+(global-set-key (kbd "C-c h e") 'view-echo-area-messages)
+(global-set-key (kbd "C-c h f") 'describe-function)
+(global-set-key (kbd "C-c h h") 'view-hello-file)
+(global-set-key (kbd "C-c h i") 'info)
+(global-set-key (kbd "C-c h k") 'describe-key)
+(global-set-key (kbd "C-c h l") 'view-lossage)
+(global-set-key (kbd "C-c h m") 'describe-mode)
+(global-set-key (kbd "C-c h o") 'describe-symbol)
+(global-set-key (kbd "C-c h p") 'finder-by-keyword)
+(global-set-key (kbd "C-c h r") 'info-emacs-manual)
+(global-set-key (kbd "C-c h s") 'describe-syntax)
+(global-set-key (kbd "C-c h v") 'describe-variable)
+(global-set-key (kbd "C-c h w") 'where-is)
+(global-set-key (kbd "C-c h x") 'describe-command)
+(global-set-key (kbd "C-c h ?") 'describe-prefix-bindings)
+
+;; sort: C-c s
+(global-set-key (kbd "C-c s c") 'sort-columns)
+(global-set-key (kbd "C-c s f") 'sort-fields)
+(global-set-key (kbd "C-c s l") 'sort-lines)
+(global-set-key (kbd "C-c s n") 'sort-numeric-fields)
+(global-set-key (kbd "C-c s p") 'sort-paragraphs)
+(global-set-key (kbd "C-c s ?") 'describe-prefix-bindings)
+
+;; ace window
+(ace-window-display-mode)
+(setq aw-translate-char-function
+      (λ (c)
+	(cond
+	 ((eq c ?s)
+	  ?v)		;; s split vert
+	 ((eq c ?S)
+	  ?b)		;; h split hori
+	 ((eq c ?w)
+	  ?m)		;; w swap
+	 ((eq c ?0)
+	  ?x)		;; k delete
+	 ((eq c ?!)
+	  ?o)		;; 0 delete other
+	 ((eq c ?b)
+	  ?j)		;; b select buffer
+	 (t c))))
 
 ;;;; hooks
 ;; note: for `add-hook' it’s recommended to use a function symbol and
@@ -25,17 +112,17 @@
 ;; also have a negative performance impact when running `add-hook' and
 ;; `remove-hook'.
 (defun hooks/c-mode ()
-  (local-add-hook 'before-save-hook 'chomp)
+  (add-hook-local 'before-save-hook 'chomp)
   (flycheck-mode))
 
 (defun hooks/go-mode ()
-  (local-add-hook 'before-save-hook 'gofmt)
+  (add-hook-local 'before-save-hook 'gofmt)
   (setq-local compile-command "go build ")
   (local-set-key (kbd "C-c d") 'godoc)
   (local-set-key (kbd "C-c f") 'gofmt))
 
 (defun hooks/lisp-mode ()
-  (local-add-hook 'before-save-hook 'chomp))
+  (add-hook-local 'before-save-hook 'chomp))
 
 (defun hooks/eshell-mode ()
   (local-set-key (kbd "C-l") 'eshell-clear-buffer))
@@ -48,7 +135,6 @@
 ;;;; window-system
 (when (eq window-system 'ns)
   (defun ns/apply-theme (appearance)
-    (mapc 'disable-theme custom-enabled-themes)
     (pcase appearance
       ('light (load-theme 'modus-operandi t))
       ('dark  (load-theme 'modus-vivendi  t))))
@@ -66,65 +152,16 @@
       (menu-bar-mode -1))
     (fancy-startup-screen))
 
+;;;; slime
+(load (expand-file-name "~/lib/quicklisp/slime-helper"))
+(setq inferior-lisp-program "sbcl")
+
 ;;;; misc
 (exec-path-from-shell-initialize)
 (windmove-default-keybindings 'shift)
 (put 'dired-find-alternate-file 'disabled nil)
 (put 'add-hook 'lisp-indent-function 1)
-
-;;;; funcs
-(defun local-add-hook (hook function &optional depth)
-  "Local version of `add-hook'."
-  (add-hook hook function depth t))
-
-(defun infer-indentation-style ()
-  "Set current buffer's indent-tabs-mode guessing the style in use."
-  (interactive)
-  (setq-local indent-tabs-mode (>= (how-many "^\t" (point-min) (point-max))
-				   (how-many "^  " (point-min) (point-max)))))
-
-(defun chomp (&optional start end)
-  "Remove trailing whitespaces."
-  (interactive
-   (when (use-region-p) (list (region-beginning) (region-end))))
-  (unless (numberp start) (setq start (point-min)))
-  (unless (numberp end) (setq end (point-max)))
-  (let ((cur-point (point)))
-    (goto-char start)
-    (while (re-search-forward "[ \t]+$" end t)
-      (replace-match ""))
-    (goto-char cur-point)))
-
-(defun fixup-smart-quotes (&optional start end)
-  "Replace “smart” quotes with dumb ones."
-  (interactive
-   (when (use-region-p) (list (region-beginning) (region-end))))
-  (unless (numberp start) (setq start (point-min)))
-  (unless (numberp end) (setq end (point-max)))
-  (replace-regexp "[“”]" "\"" nil start end)
-  (replace-regexp "[‘’]" "'" nil start end))
-
-(defun reread-buffer ()
-  "Reload buffer."
-  (interactive)
-  (find-file buffer-file-name))
-
-(defun find-file-sudo (filename)
-  "Find file using sudo."
-  (interactive "FFind file: ")
-  (find-file (concat "/sudo::" filename)))
-
-(defun find-file-ssh (machine filename)
-  "Find file over ssh."
-  (interactive "MMachine: \nFFile: ")
-  (find-file (concat "/ssh:" machine ":" filename)))
-
-(defun eshell-clear-buffer ()
-  "Clear eshell buffer."
-  (interactive)
-  (let ((inhibit-read-only t))
-    (erase-buffer)
-    (eshell-send-input)))
+(put 'interactive 'lisp-indent-function 1)
 
 ;;;; custom zone
 (custom-set-variables
@@ -136,6 +173,7 @@
  '(Info-selection-hook '(mixed-pitch-mode))
  '(ansi-color-faces-vector
    [default default default italic underline success warning error])
+ '(aw-dispatch-always t)
  '(blink-cursor-mode nil)
  '(c-basic-offset 'set-from-style)
  '(c-default-style
@@ -198,10 +236,10 @@
  '(objc-font-lock-extra-types nil)
  '(package-selected-packages
    '(ace-window acme-theme afternoon-theme company exec-path-from-shell
-     folding go-mode gruvbox-theme lua-mode magit
-     markdown-mode mixed-pitch ns-auto-titlebar origami
-     plan9-theme sudoku swift-mode the-matrix-theme tide
-     timu-macos-theme typescript-mode web-mode))
+		folding go-mode gruvbox-theme lua-mode magit
+		markdown-mode mixed-pitch ns-auto-titlebar origami
+		plan9-theme slime sudoku swift-mode tide
+		typescript-mode web-mode))
  '(query-replace-highlight t)
  '(require-final-newline t)
  '(slime-kill-without-query-p t)
@@ -214,6 +252,9 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:family "Anonymous Pro" :foundry "nil" :slant normal :weight regular :height 140 :width normal))))
+ '(default ((t (:height 140 :family "Anonymous Pro"))))
+ '(aw-leading-char-face ((t (:inherit line-number-major-tick :height 300))))
+ '(aw-mode-line-face ((t (:inherit trailing-whitespace))))
+ '(battery-load-critical ((t (:inherit error :inverse-video t))))
  '(ns-working-text-face ((t (:background "gold2" :foreground "black"))))
- '(variable-pitch ((t (:family "SF Pro")))))
+ '(variable-pitch ((t (:family "Lucida Grande" :height 140)))))
