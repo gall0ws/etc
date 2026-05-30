@@ -26,6 +26,7 @@
 (global-set-key (kbd "s-<") 'exec<)
 (global-set-key (kbd "s->") 'exec>)
 (global-set-key (kbd "s-|") 'exec|)
+(global-set-key (kbd "s-!") 'exec!)
 (global-set-key (kbd "s-?") 'describe-prefix-bindings)
 
 ;; basics: C-c
