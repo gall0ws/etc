@@ -1,41 +1,244 @@
-;; -*- mode: emacs-lisp; lexical-binding: t -*-
+;;; -*- mode: emacs-lisp; lexical-binding: t -*-
 
-;;;; load my libraries (ref. https://github.com/gall0ws/elisp)
-(mapc 'load (directory-files "~/lib/elisp" t "\\.elc$"))
+;;; load my libraries (ref. https://github.com/gall0ws/elisp)
+(let ((lib-dir "~/lib/elisp"))
+  (when (file-exists-p lib-dir)
+    (mapc 'load (directory-files lib-dir t "\\.elc$"))))
 
-;;;; default frame settings
+;;; default frame settings
 (add-to-list 'initial-frame-alist '(vertical-scroll-bars . nil))
 
-;;;; packages stuff
+;;; global minor modes (emacs standard, no packages)
+(desktop-save-mode (if window-system t -1))
+(display-battery-mode)
+(indent-tabs-mode)
+(menu-bar-mode (if (eq window-system 'ns) t -1))
+(pixel-scroll-mode (if window-system t -1))
+(savehist-mode)
+(tool-bar-mode -1)
+(xterm-mouse-mode (if window-system -1 t))
+
+;;; hooks
+;; Note: for `add-hook' it’s recommended to use a function symbol and
+;; not a lambda form. Using a symbol will ensure that the function is
+;; not re-added if the function is edited, and using lambda forms may
+;; also have a negative performance impact when running ‘add-hook’ and
+;; ‘remove-hook’.
+(defun hooks/c-mode ()
+  (local-set-key (kbd "C-c I") 'c-indent-defun)
+  (add-hook-local 'before-save-hook 'chomp)
+  (flycheck-mode))
+
+(defun hooks/emacs-lisp-mode ()
+  (add-hook-local 'before-save-hook 'chomp)
+  (local-set-key (kbd "C-c b") 'elisp-byte-compile-file))
+
+(defun hooks/eshell-mode ()
+  ;; I know there's `eshell-rebind' module, but I don't like it.
+  (local-set-key (kbd "C-l")   'eshell-clear-buffer)
+  (local-set-key (kbd "C-c u") 'eshell-kill-line)
+  (local-set-key (kbd "C-c z") 'eshell-job-stop)
+  (company-mode -1)
+  (eshell-vterm-mode)
+  (mapc (lambda (env)
+	  (add-to-list 'eshell-variable-aliases-list env))
+	(append
+	 '(("TERM" (lambda() "xterm-256color") t t)
+	   ("PLAN9" (lambda () (file-name-concat (getenv "HOME") "9")) t t))
+	 (when (eq system-type 'darwin)
+	   '(("HOMEBREW_NO_AUTO_UPDATE" t t)
+	     ("HOMEBREW_EVAL_ALL" t t)
+	     ("HOMEBREW_NO_ENV_HINTS" t t))))))
+
+(defun hooks/ns-system-appearance-change (appearance)
+  (pcase appearance
+    ('light (load-theme 'modus-operandi t))
+    ('dark  (load-theme 'modus-vivendi  t))))
+
+(declare-function eshell/pwd "em-dirs.el")
+
+(defun hooks/eshell-directory-change ()
+  (rename-buffer
+   (format "*et%s*" (string-replace "/" ":" (eshell/pwd)))
+   t))
+
+(defun hooks/go-mode ()
+  (local-set-key (kbd "C-c d") 'godoc)
+  (local-set-key (kbd "C-c f") 'gofmt)
+  (add-hook-local 'before-save-hook 'gofmt)
+  (setq-local compile-command "go build "))
+
+(defun hooks/mixed-pitch-mode ()
+  (add-to-list 'mixed-pitch-fixed-pitch-faces 'widget-field))
+
+(defun hooks/vterm-mode ()
+  (company-mode -1))
+
+;; note: hooks for external packages are defined in use-package declaration
+(add-hook 'Custom-mode-hook 'mixed-pitch-mode)
+(add-hook 'Info-selection-hook 'mixed-pitch-mode)
+(add-hook 'c-mode-hook 'hooks/c-mode)
+(add-hook 'emacs-lisp-mode-hook 'hooks/emacs-lisp-mode)
+(add-hook 'help-mode-hook 'mixed-pitch-mode)
+(add-hook 'ns-system-appearance-change-functions 'hooks/ns-system-appearance-change)
+
+;;; packages
+(setq use-package-always-ensure t
+      package-install-upgrade-built-in t)
+
 (package-initialize)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
 
-;;;; globals
-(global-company-mode)
-(pixel-scroll-mode)
+;; bootstrap
+(unless package-archive-contents
+  (package-refresh-contents))
+(unless (package-installed-p 'use-package)
+  (package-install 'use-package))
 
-;;;; bindings
+(require 'use-package)
+
+(use-package eshell
+  :hook
+  ((eshell-mode . hooks/eshell-mode)
+   (eshell-directory-change . hooks/eshell-directory-change))
+  :custom
+  (eshell-directory-name "~/lib/eshell")
+  (eshell-visual-commands
+      '("mpv" "yt-dlp" "yt" "mtr" "typespeed" "watch" "vi"
+	"tmux" "top" "htop" "less" "more" "links" "ncftp"))
+  (eshell-prompt-function
+   (lambda ()
+     (string-join
+      (list
+       (unless (eshell-exit-success-p)
+	 (format "[%d] " eshell-last-command-status))
+       (format "%c %s %c"
+	       (char-from-name "MATHEMATICAL LEFT ANGLE BRACKET")
+	       (abbreviate-file-name (eshell/pwd))
+	       (char-from-name "MATHEMATICAL RIGHT ANGLE BRACKET"))
+       (if (eq (file-user-uid) 0) " # " " λ "))))))
+
+(use-package ace-window
+  :demand t
+  :custom-face
+  (aw-leading-char-face ((t (:inherit variable-pitch
+				      :foreground "#ff5f5f"
+				      :weight bold :height 400))))
+  :custom
+  (ace-window-posframe-mode)
+  (aw-dispatch-always t)
+  (aw-translate-char-function
+   (lambda (c)
+     (cond
+      ((eq c ?s)
+       ?v)		;; s split vert
+      ((eq c ?S)
+       ?b)		;; h split hori
+      ((eq c ?w)
+       ?m)		;; w swap
+      ((eq c ?0)
+       ?x)		;; k delete
+      ((eq c ?!)
+       ?o)		;; 0 delete other
+      ((eq c ?b)
+       ?j)		;; b select buffer
+      (t c)))))
+
+(use-package company
+  :demand t
+  :config (global-company-mode))
+
+(use-package dired-quick-sort
+  :defer t
+  :commands (dired)
+  :init
+  (setq dired-quick-sort-suppress-setup-warning t)
+  (dired-quick-sort-setup))
+
+(use-package eshell-toggle
+  :bind ("C-c E" . eshell-toggle))
+
+(use-package eshell-vterm
+  :defer t
+  :commands (eshell)
+  :after vterm)
+
+(use-package exec-path-from-shell
+  :if (eq system-type 'darwin)
+  :config
+  (exec-path-from-shell-initialize))
+
+(use-package helm
+  :demand t
+  :config (helm-mode))
+
+(use-package flycheck
+  :defer t
+  :commands (flycheck-mode))
+
+(use-package go-mode
+  :defer t
+  :commands (go-mode)
+  :hook (go-mode . hooks/go-mode))
+
+(use-package gruvbox-theme
+  :when (eq 'window-system 'x)
+  :config (load-theme 'gruvbox-dark-hard t))
+
+(use-package ns-auto-titlebar
+  :if (eq window-system 'ns)
+  :config (ns-auto-titlebar-mode))
+
+(use-package magit
+  :defer t
+  :commands (magit))
+
+(use-package mixed-pitch
+  :defer t
+  :commands (mixed-pitch-mode)
+  :hook hooks/mixed-pitch-mode
+  :custom (mixed-pitch-variable-pitch-cursor 'box))
+
+(use-package slime
+  :defer t
+  :commands (slime)
+  :init
+  (setq inferior-lisp-program "sbcl")
+  (let ((slime-helper "~/lib/quicklisp/slime-helper.el"))
+    (when (file-exists-p slime-helper)
+      (load (expand-file-name slime-helper))))
+  :custom
+  (slime-kill-without-query-p t)
+  (slime-net-coding-system 'utf-8-unix))
+
+(use-package vterm
+  :defer t
+  :commands (vterm eshell-vterm-mode)
+  :hook (vterm-mode . hooks/vterm-mode))
+
+;;; bindings
 ;; misc:
 (global-set-key (kbd "C-h") 'backward-delete-char-untabify)
-(global-set-key (kbd "s-e") 'eshell)
 (global-set-key (kbd "s-x") 'execute-extended-command)
-(global-set-key (kbd "s-<") 'exec<)
-(global-set-key (kbd "s->") 'exec>)
-(global-set-key (kbd "s-|") 'exec|)
-(global-set-key (kbd "s-!") 'exec!)
 (global-set-key (kbd "s-?") 'describe-prefix-bindings)
 
 ;; basics: C-c
 (global-set-key (kbd "C-c b") 'compile)
 (global-set-key (kbd "C-c c") 'comment-region)
 (global-set-key (kbd "C-c C") 'chomp)
-(global-set-key (kbd "C-c E") 'eshell-toggle)
+(global-set-key (kbd "C-c i") 'indent-region)
 (global-set-key (kbd "C-c l") 'goto-line)
+(global-set-key (kbd "C-c N") 'display-line-numbers-mode)
 (global-set-key (kbd "C-c m") 'move-to-char)
 (global-set-key (kbd "C-c M") 'man)
 (global-set-key (kbd "C-c o") 'ace-window)
-(global-set-key (kbd "C-c r") 'reread-buffer)
-(global-set-key (kbd "C-c t") 'transient-mark-mode)
+(global-set-key (kbd "C-c R") 'reread-buffer)
+(global-set-key (kbd "C-c S") 'eshell)
+(global-set-key (kbd "C-c T") 'vterm)
+(global-set-key (kbd "C-c <") 'exec<)
+(global-set-key (kbd "C-c >") 'exec>)
+(global-set-key (kbd "C-c |") 'exec|)
+(global-set-key (kbd "C-c !") 'exec!)
 (global-set-key (kbd "C-c ?") 'describe-prefix-bindings)
 
 ;; eval: C-c e
@@ -55,20 +258,23 @@
 (global-set-key (kbd "C-c f R") 'fill-region-as-paragraph)
 (global-set-key (kbd "C-c f ?") 'describe-prefix-bindings)
 
-;; help/doc: C-c h (mostly translates native C-h prefix)
+;; help/doc: C-c h (mostly replaces native C-h prefix)
 (global-set-key (kbd "C-c h a") 'apropos)
 (global-set-key (kbd "C-c h b") 'describe-bindings)
 (global-set-key (kbd "C-c h c") 'describe-key-briefly)
 (global-set-key (kbd "C-c h d") 'apropos-documentation)
 (global-set-key (kbd "C-c h e") 'view-echo-area-messages)
 (global-set-key (kbd "C-c h f") 'describe-function)
+(global-set-key (kbd "C-c h F") 'describe-face)
 (global-set-key (kbd "C-c h h") 'view-hello-file)
 (global-set-key (kbd "C-c h i") 'info)
+(global-set-key (kbd "C-c h I") 'info-display-manual)
 (global-set-key (kbd "C-c h k") 'describe-key)
 (global-set-key (kbd "C-c h l") 'view-lossage)
 (global-set-key (kbd "C-c h m") 'describe-mode)
 (global-set-key (kbd "C-c h o") 'describe-symbol)
 (global-set-key (kbd "C-c h p") 'finder-by-keyword)
+(global-set-key (kbd "C-c h P") 'describe-package)
 (global-set-key (kbd "C-c h r") 'info-emacs-manual)
 (global-set-key (kbd "C-c h s") 'describe-syntax)
 (global-set-key (kbd "C-c h v") 'describe-variable)
@@ -84,146 +290,22 @@
 (global-set-key (kbd "C-c s p") 'sort-paragraphs)
 (global-set-key (kbd "C-c s ?") 'describe-prefix-bindings)
 
-;; ace window
-(ace-window-display-mode)
-(setq aw-translate-char-function
-      (λ (c)
-	(cond
-	 ((eq c ?s)
-	  ?v)		;; s split vert
-	 ((eq c ?S)
-	  ?b)		;; h split hori
-	 ((eq c ?w)
-	  ?m)		;; w swap
-	 ((eq c ?0)
-	  ?x)		;; k delete
-	 ((eq c ?!)
-	  ?o)		;; 0 delete other
-	 ((eq c ?b)
-	  ?j)		;; b select buffer
-	 (t c))))
-
-;;;; eshell
-(setq esh-custom-visual-commands '("watch" "typespeed" "mtr"))
-(setq esh-custom-variable-aliases
-      (append
-       '(("TERM" (lambda() "xterm-256color") t t)
-	 ("PLAN9" (lambda () (file-name-concat (getenv "HOME") "9")) t t))
-       (when (eq system-type 'darwin)
-	 '(("HOMEBREW_NO_AUTO_UPDATE" t t)
-	   ("HOMEBREW_EVAL_ALL" t t)
-	   ("HOMEBREW_NO_ENV_HINTS" t t)))))
-
-(defun hooks/eshell-load ()
-  (setq eshell-directory-name "~/lib/eshell/")
-  (setq eshell-modules-list
-	(remove 'eshell-banner eshell-modules-list)))
-
-(defun hooks/eshell-first-time-mode ()
-  (setq eshell-prompt-function
-	(lambda ()
-	  (string-join
-	   (list
-	    (unless (eshell-exit-success-p)
-	      (format "[%d] " eshell-last-command-status))
-	    (format "%c %s %c"
-		    (char-from-name "MATHEMATICAL LEFT ANGLE BRACKET")
-		    (abbreviate-file-name (eshell/pwd))
-		    (char-from-name "MATHEMATICAL RIGHT ANGLE BRACKET"))
-	    (if (eq (file-user-uid) 0) " # " " λ ")))))
-  (mapc (lambda (cmd)
-	  (add-to-list 'eshell-visual-commands cmd))
-	esh-custom-visual-commands))
-
-(defun hooks/eshell-mode ()
-  ;; I know there's eshell-rebind module, but I wanna keep C-u etc.
-  (local-set-key (kbd "C-l") 'eshell-clear-buffer)
-  (local-set-key (kbd "C-c u") 'eshell-kill-line)
-  (company-mode -1)
-  (mapc (lambda (var)
-	  (add-to-list 'eshell-variable-aliases-list var))
-	 esh-custom-variable-aliases))
-
-(defun hooks/eshell-directory-change ()
-  (rename-buffer
-   (format "*esh%s*" (string-replace "/" ":" (eshell/pwd)))
-   t))
-
-(add-hook 'eshell-load-hook 'hooks/eshell-load)
-(add-hook 'eshell-first-time-mode-hook 'hooks/eshell-first-time-mode)
-(add-hook 'eshell-mode-hook 'hooks/eshell-mode)
-(add-hook 'eshell-directory-change-hook 'hooks/eshell-directory-change)
-
-;;;; hooks
-;; note: for `add-hook' it’s recommended to use a function symbol and
-;; not a lambda form.  Using a symbol will ensure that the function is
-;; not re-added if the function is edited, and using lambda forms may
-;; also have a negative performance impact when running `add-hook' and
-;; `remove-hook'.
-(defun hooks/c-mode ()
-  (add-hook-local 'before-save-hook 'chomp)
-  (flycheck-mode))
-
-(defun hooks/go-mode ()
-  (add-hook-local 'before-save-hook 'gofmt)
-  (setq-local compile-command "go build ")
-  (local-set-key (kbd "C-c d") 'godoc)
-  (local-set-key (kbd "C-c f") 'gofmt))
-
-(defun hooks/emacs-lisp-mode ()
-  (add-hook-local 'before-save-hook 'chomp)
-  (local-set-key (kbd "C-c b") 'elisp-byte-compile-file))
-
-(defun hooks/mixed-pitch-mode-hook ()
-  (add-to-list 'mixed-pitch-fixed-pitch-faces 'widget-field))
-
-(add-hook 'c-mode-hook		'hooks/c-mode)
-(add-hook 'go-mode-hook		'hooks/go-mode)
-(add-hook 'emacs-lisp-mode-hook	'hooks/emacs-lisp-mode)
-(add-hook 'mixed-pitch-mode-hook 'hooks/mixed-pitch-mode-hook)
-
-;;;; window-system
-(when (eq window-system 'ns)
-  (defun ns/apply-theme (appearance)
-    (pcase appearance
-      ('light (load-theme 'modus-operandi t))
-      ('dark  (load-theme 'modus-vivendi  t))))
-  (add-hook 'ns-system-appearance-change-functions 'ns/apply-theme)
-  (ns-auto-titlebar-mode)
-  (menu-bar-mode t))
-
-(when (eq window-system 'x)
-  (load-theme 'gruvbox-dark-hard t)
-  (menu-bar-mode -1))
-
-(if (eq window-system nil)
-    (progn
-      (xterm-mouse-mode)
-      (menu-bar-mode -1)))
-
-;;;; slime
-(load (expand-file-name "~/lib/quicklisp/slime-helper"))
-(setq inferior-lisp-program "sbcl")
-
-;;;; misc
-(exec-path-from-shell-initialize)
+;;; misc
+(setq ns-pop-up-frames nil
+      ns-right-alternate-modifier 'none)
 (windmove-default-keybindings 'shift)
-(put 'dired-find-alternate-file 'disabled nil)
 (put 'add-hook 'lisp-indent-function 1)
 (put 'interactive 'lisp-indent-function 1)
 
-;;;; custom zone
+;;; custom zone
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(Custom-mode-hook '(mixed-pitch-mode))
- '(Info-selection-hook '(mixed-pitch-mode))
  '(ansi-color-faces-vector
    [default default default italic underline success warning error])
  '(auth-source-save-behavior nil)
- '(aw-dispatch-always t)
  '(blink-cursor-mode nil)
  '(c-basic-offset 'set-from-style)
  '(c-default-style
@@ -263,7 +345,7 @@
      "b89ae2d35d2e18e4286c8be8aaecb41022c1a306070f64a66fd114310ade88aa"
      default))
  '(default-truncate-lines nil t)
- '(display-battery-mode t)
+ '(dired-kill-when-opening-new-dired-buffer t)
  '(display-hourglass t)
  '(display-time-24hr-format t)
  '(display-time-default-load-average nil)
@@ -271,31 +353,18 @@
  '(explicit-shell-file-name nil)
  '(face-font-family-alternatives nil)
  '(focus-follows-mouse t)
- '(help-mode-hook '(mixed-pitch-mode))
  '(hourglass-delay 0)
- '(indent-tabs-mode t)
  '(inhibit-startup-screen t)
- '(initial-scratch-message nil)
+ '(insert-directory-program (if (eq system-type 'gnu/linux) "ls" "gls"))
  '(js-indent-level 4)
  '(line-spacing 2)
- '(mixed-pitch-variable-pitch-cursor 'box)
  '(mouse-autoselect-window t)
  '(mouse-drag-and-drop-region 'meta)
  '(next-line-add-newlines nil)
- '(ns-pop-up-frames nil)
- '(ns-right-alternate-modifier 'none)
  '(objc-font-lock-extra-types nil)
- '(package-selected-packages
-   '(ace-window acme-theme company eshell-toggle exec-path-from-shell
-		go-mode gruvbox-theme lua-mode magit markdown-mode
-		mixed-pitch mpv ns-auto-titlebar plan9-theme slime
-		sudoku swift-mode tide typescript-mode web-mode))
  '(query-replace-highlight t)
  '(require-final-newline t)
- '(slime-kill-without-query-p t)
- '(slime-net-coding-system 'utf-8-unix)
- '(term-suppress-hard-newline t)
- '(tool-bar-mode nil))
+ '(term-suppress-hard-newline t))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -303,8 +372,8 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(default ((t (:height 140 :family "Iosevka"))))
- '(aw-leading-char-face ((t (:inherit line-number-major-tick :height 300))))
- '(aw-mode-line-face ((t (:inherit trailing-whitespace))))
  '(battery-load-critical ((t (:inherit error :inverse-video t))))
+ '(font-lock-comment-face ((t (:inherit modus-themes-slant :foreground "#989898" :slant italic))))
+ '(font-lock-doc-face ((t (:foreground "#9ac8e0" :slant italic))))
  '(ns-working-text-face ((t (:background "gold2" :foreground "black"))))
  '(variable-pitch ((t (:height 140 :width condensed :family "SF Pro")))))
