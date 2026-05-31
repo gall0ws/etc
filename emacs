@@ -302,9 +302,9 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:height 140 :family "Anonymous Pro"))))
+ '(default ((t (:height 140 :family "Iosevka"))))
  '(aw-leading-char-face ((t (:inherit line-number-major-tick :height 300))))
  '(aw-mode-line-face ((t (:inherit trailing-whitespace))))
  '(battery-load-critical ((t (:inherit error :inverse-video t))))
  '(ns-working-text-face ((t (:background "gold2" :foreground "black"))))
- '(variable-pitch ((t (:family "Lucida Grande" :height 140)))))
+ '(variable-pitch ((t (:height 140 :width condensed :family "SF Pro")))))
