@@ -17,6 +17,7 @@
 ;;;; bindings
 ;; misc:
 (global-set-key (kbd "C-h") 'backward-delete-char-untabify)
+(global-set-key (kbd "s-e") 'eshell)
 (global-set-key (kbd "s-x") 'execute-extended-command)
 (global-set-key (kbd "s-<") 'exec<)
 (global-set-key (kbd "s->") 'exec>)
@@ -102,6 +103,57 @@
 	  ?j)		;; b select buffer
 	 (t c))))
 
+;;;; eshell
+(setq esh-custom-visual-commands '("watch" "typespeed" "mtr"))
+(setq esh-custom-variable-aliases
+      (append
+       '(("TERM" (lambda() "xterm-256color") t t)
+	 ("PLAN9" (lambda () (file-name-concat (getenv "HOME") "9")) t t))
+       (when (eq system-type 'darwin)
+	 '(("HOMEBREW_NO_AUTO_UPDATE" t t)
+	   ("HOMEBREW_EVAL_ALL" t t)
+	   ("HOMEBREW_NO_ENV_HINTS" t t)))))
+
+(defun hooks/eshell-load ()
+  (setq eshell-directory-name "~/lib/eshell/")
+  (setq eshell-modules-list
+	(remove 'eshell-banner eshell-modules-list)))
+
+(defun hooks/eshell-first-time-mode ()
+  (setq eshell-prompt-function
+	(lambda ()
+	  (string-join
+	   (list
+	    (unless (eshell-exit-success-p)
+	      (format "[%d] " eshell-last-command-status))
+	    (format "%c %s %c"
+		    (char-from-name "MATHEMATICAL LEFT ANGLE BRACKET")
+		    (abbreviate-file-name (eshell/pwd))
+		    (char-from-name "MATHEMATICAL RIGHT ANGLE BRACKET"))
+	    (if (eq (file-user-uid) 0) " # " " λ ")))))
+  (mapc (lambda (cmd)
+	  (add-to-list 'eshell-visual-commands cmd))
+	esh-custom-visual-commands))
+
+(defun hooks/eshell-mode ()
+  ;; I know there's eshell-rebind module, but I wanna keep C-u etc.
+  (local-set-key (kbd "C-l") 'eshell-clear-buffer)
+  (local-set-key (kbd "C-c u") 'eshell-kill-line)
+  (company-mode -1)
+  (mapc (lambda (var)
+	  (add-to-list 'eshell-variable-aliases-list var))
+	 esh-custom-variable-aliases))
+
+(defun hooks/eshell-directory-change ()
+  (rename-buffer
+   (format "*esh%s*" (string-replace "/" ":" (eshell/pwd)))
+   t))
+
+(add-hook 'eshell-load-hook 'hooks/eshell-load)
+(add-hook 'eshell-first-time-mode-hook 'hooks/eshell-first-time-mode)
+(add-hook 'eshell-mode-hook 'hooks/eshell-mode)
+(add-hook 'eshell-directory-change-hook 'hooks/eshell-directory-change)
+
 ;;;; hooks
 ;; note: for `add-hook' it’s recommended to use a function symbol and
 ;; not a lambda form.  Using a symbol will ensure that the function is
@@ -122,14 +174,13 @@
   (add-hook-local 'before-save-hook 'chomp)
   (local-set-key (kbd "C-c b") 'elisp-byte-compile-file))
 
-(defun hooks/eshell-mode ()
-  (local-set-key (kbd "C-l") 'eshell-clear-buffer)
-  (company-mode -1))
+(defun hooks/mixed-pitch-mode-hook ()
+  (add-to-list 'mixed-pitch-fixed-pitch-faces 'widget-field))
 
 (add-hook 'c-mode-hook		'hooks/c-mode)
 (add-hook 'go-mode-hook		'hooks/go-mode)
 (add-hook 'emacs-lisp-mode-hook	'hooks/emacs-lisp-mode)
-(add-hook 'eshell-mode-hook	'hooks/eshell-mode)
+(add-hook 'mixed-pitch-mode-hook 'hooks/mixed-pitch-mode-hook)
 
 ;;;; window-system
 (when (eq window-system 'ns)
@@ -148,8 +199,7 @@
 (if (eq window-system nil)
     (progn
       (xterm-mouse-mode)
-      (menu-bar-mode -1))
-    (fancy-startup-screen))
+      (menu-bar-mode -1)))
 
 ;;;; slime
 (load (expand-file-name "~/lib/quicklisp/slime-helper"))
@@ -218,49 +268,6 @@
  '(display-time-24hr-format t)
  '(display-time-default-load-average nil)
  '(electric-indent-mode nil)
- '(eshell-modules-list
-   '(eshell-alias eshell-basic eshell-cmpl eshell-dirs eshell-extpipe
-		  eshell-glob eshell-hist eshell-ls eshell-pred
-		  eshell-prompt eshell-rebind eshell-script
-		  eshell-term eshell-tramp eshell-unix))
- '(eshell-variable-aliases-list
-   '(("TERM" "xterm-256color" t t)
-     ("COLUMNS"
-      #[0 "\300\301\302\"\207" [window-body-width nil remap] 3] t t)
-     ("LINES"
-      #[0 "\300\301\302\"\207" [window-body-height nil remap] 3] t t)
-     ("INSIDE_EMACS" eshell-inside-emacs t nil)
-     ("PAGER"
-      (#[0 "\10\206\7\0\301\302!\207" [comint-pager getenv "PAGER"] 2]
-       . #[514 "\211\204\10\0\301\302!\210\211\211\20\207"
-	       [comint-pager setenv "PAGER"] 4 "\12\12(fn _ VALUE)"])
-      t t)
-     ("UID" #[0 "\300 \207" [file-user-uid] 1] nil t)
-     ("GID" #[0 "\300 \207" [file-group-gid] 1] nil t)
-     ("PATH"
-      (#[0 "\300\301!\302 \303\304\3\3#\207"
-	   [eshell-get-path t path-separator mapconcat identity] 6]
-       . #[514 "\300\1!\210\207" [eshell-set-path] 4
-	       "\12\12(fn _ VALUE)"])
-      t t)
-     ("_"
-      #[514 "\1\204\11\0\301\10!@\207\302\10\3\3#\207"
-	    [eshell-last-arguments last eshell-apply-indices] 6
-	    "\12\12(fn INDICES QUOTED)"]
-      nil nil)
-     ("?" (eshell-last-command-status) nil nil)
-     ("$" (eshell-last-command-result) nil nil)
-     ("0" eshell-command-name nil nil)
-     ("1" #[0 "\10@\207" [eshell-command-arguments] 1] nil t)
-     ("2" #[0 "\10A@\207" [eshell-command-arguments] 1] nil t)
-     ("3" #[0 "\301\108\207" [eshell-command-arguments 2] 2] nil t)
-     ("4" #[0 "\301\108\207" [eshell-command-arguments 3] 2] nil t)
-     ("5" #[0 "\301\108\207" [eshell-command-arguments 4] 2] nil t)
-     ("6" #[0 "\301\108\207" [eshell-command-arguments 5] 2] nil t)
-     ("7" #[0 "\301\108\207" [eshell-command-arguments 6] 2] nil t)
-     ("8" #[0 "\301\108\207" [eshell-command-arguments 7] 2] nil t)
-     ("9" #[0 "\301\108\207" [eshell-command-arguments 8] 2] nil t)
-     ("*" (eshell-command-arguments) nil nil)))
  '(explicit-shell-file-name nil)
  '(face-font-family-alternatives nil)
  '(focus-follows-mouse t)
@@ -279,11 +286,10 @@
  '(ns-right-alternate-modifier 'none)
  '(objc-font-lock-extra-types nil)
  '(package-selected-packages
-   '(ace-window acme-theme company eshell-toggle
-		exec-path-from-shell go-mode gruvbox-theme
-		lua-mode magit markdown-mode mixed-pitch
-		ns-auto-titlebar plan9-theme slime sudoku
-		swift-mode tide typescript-mode web-mode))
+   '(ace-window acme-theme company eshell-toggle exec-path-from-shell
+		go-mode gruvbox-theme lua-mode magit markdown-mode
+		mixed-pitch mpv ns-auto-titlebar plan9-theme slime
+		sudoku swift-mode tide typescript-mode web-mode))
  '(query-replace-highlight t)
  '(require-final-newline t)
  '(slime-kill-without-query-p t)
