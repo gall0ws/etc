@@ -28,7 +28,7 @@
 (global-set-key (kbd "C-c b") 'compile)
 (global-set-key (kbd "C-c c") 'comment-region)
 (global-set-key (kbd "C-c C") 'chomp)
-(global-set-key (kbd "C-c E") 'eshell)
+(global-set-key (kbd "C-c E") 'eshell-toggle)
 (global-set-key (kbd "C-c l") 'goto-line)
 (global-set-key (kbd "C-c m") 'move-to-char)
 (global-set-key (kbd "C-c M") 'man)
@@ -123,7 +123,8 @@
   (local-set-key (kbd "C-c b") 'elisp-byte-compile-file))
 
 (defun hooks/eshell-mode ()
-  (local-set-key (kbd "C-l") 'eshell-clear-buffer))
+  (local-set-key (kbd "C-l") 'eshell-clear-buffer)
+  (company-mode -1))
 
 (add-hook 'c-mode-hook		'hooks/c-mode)
 (add-hook 'go-mode-hook		'hooks/go-mode)
@@ -171,6 +172,7 @@
  '(Info-selection-hook '(mixed-pitch-mode))
  '(ansi-color-faces-vector
    [default default default italic underline success warning error])
+ '(auth-source-save-behavior nil)
  '(aw-dispatch-always t)
  '(blink-cursor-mode nil)
  '(c-basic-offset 'set-from-style)
@@ -216,6 +218,49 @@
  '(display-time-24hr-format t)
  '(display-time-default-load-average nil)
  '(electric-indent-mode nil)
+ '(eshell-modules-list
+   '(eshell-alias eshell-basic eshell-cmpl eshell-dirs eshell-extpipe
+		  eshell-glob eshell-hist eshell-ls eshell-pred
+		  eshell-prompt eshell-rebind eshell-script
+		  eshell-term eshell-tramp eshell-unix))
+ '(eshell-variable-aliases-list
+   '(("TERM" "xterm-256color" t t)
+     ("COLUMNS"
+      #[0 "\300\301\302\"\207" [window-body-width nil remap] 3] t t)
+     ("LINES"
+      #[0 "\300\301\302\"\207" [window-body-height nil remap] 3] t t)
+     ("INSIDE_EMACS" eshell-inside-emacs t nil)
+     ("PAGER"
+      (#[0 "\10\206\7\0\301\302!\207" [comint-pager getenv "PAGER"] 2]
+       . #[514 "\211\204\10\0\301\302!\210\211\211\20\207"
+	       [comint-pager setenv "PAGER"] 4 "\12\12(fn _ VALUE)"])
+      t t)
+     ("UID" #[0 "\300 \207" [file-user-uid] 1] nil t)
+     ("GID" #[0 "\300 \207" [file-group-gid] 1] nil t)
+     ("PATH"
+      (#[0 "\300\301!\302 \303\304\3\3#\207"
+	   [eshell-get-path t path-separator mapconcat identity] 6]
+       . #[514 "\300\1!\210\207" [eshell-set-path] 4
+	       "\12\12(fn _ VALUE)"])
+      t t)
+     ("_"
+      #[514 "\1\204\11\0\301\10!@\207\302\10\3\3#\207"
+	    [eshell-last-arguments last eshell-apply-indices] 6
+	    "\12\12(fn INDICES QUOTED)"]
+      nil nil)
+     ("?" (eshell-last-command-status) nil nil)
+     ("$" (eshell-last-command-result) nil nil)
+     ("0" eshell-command-name nil nil)
+     ("1" #[0 "\10@\207" [eshell-command-arguments] 1] nil t)
+     ("2" #[0 "\10A@\207" [eshell-command-arguments] 1] nil t)
+     ("3" #[0 "\301\108\207" [eshell-command-arguments 2] 2] nil t)
+     ("4" #[0 "\301\108\207" [eshell-command-arguments 3] 2] nil t)
+     ("5" #[0 "\301\108\207" [eshell-command-arguments 4] 2] nil t)
+     ("6" #[0 "\301\108\207" [eshell-command-arguments 5] 2] nil t)
+     ("7" #[0 "\301\108\207" [eshell-command-arguments 6] 2] nil t)
+     ("8" #[0 "\301\108\207" [eshell-command-arguments 7] 2] nil t)
+     ("9" #[0 "\301\108\207" [eshell-command-arguments 8] 2] nil t)
+     ("*" (eshell-command-arguments) nil nil)))
  '(explicit-shell-file-name nil)
  '(face-font-family-alternatives nil)
  '(focus-follows-mouse t)
@@ -234,11 +279,11 @@
  '(ns-right-alternate-modifier 'none)
  '(objc-font-lock-extra-types nil)
  '(package-selected-packages
-   '(ace-window acme-theme afternoon-theme company exec-path-from-shell
-		folding go-mode gruvbox-theme lua-mode magit
-		markdown-mode mixed-pitch ns-auto-titlebar origami
-		plan9-theme slime sudoku swift-mode tide
-		typescript-mode web-mode))
+   '(ace-window acme-theme company eshell-toggle
+		exec-path-from-shell go-mode gruvbox-theme
+		lua-mode magit markdown-mode mixed-pitch
+		ns-auto-titlebar plan9-theme slime sudoku
+		swift-mode tide typescript-mode web-mode))
  '(query-replace-highlight t)
  '(require-final-newline t)
  '(slime-kill-without-query-p t)
