@@ -1,4 +1,4 @@
-;; hey emacs, this is your -*- lisp -*- configuration file!
+;; -*- mode: emacs-lisp; lexical-binding: t -*-
 
 ;;;; load my libraries (ref. https://github.com/gall0ws/elisp)
 (let ((load-prefer-newer t))
@@ -15,7 +15,6 @@
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
 
 ;;;; globals
-(display-battery-mode)
 (global-company-mode)
 (pixel-scroll-mode)
 
@@ -145,7 +144,7 @@
   (menu-bar-mode t))
 
 (when (eq window-system 'x)
-  (load-theme gruvbox-dark-hard t)
+  (load-theme 'gruvbox-dark-hard t)
   (menu-bar-mode -1))
 
 (if (eq window-system nil)
@@ -215,6 +214,7 @@
      "b89ae2d35d2e18e4286c8be8aaecb41022c1a306070f64a66fd114310ade88aa"
      default))
  '(default-truncate-lines nil t)
+ '(display-battery-mode t)
  '(display-hourglass t)
  '(display-time-24hr-format t)
  '(display-time-default-load-average nil)
