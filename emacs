@@ -122,15 +122,16 @@
   (local-set-key (kbd "C-c d") 'godoc)
   (local-set-key (kbd "C-c f") 'gofmt))
 
-(defun hooks/lisp-mode ()
-  (add-hook-local 'before-save-hook 'chomp))
+(defun hooks/emacs-lisp-mode ()
+  (add-hook-local 'before-save-hook 'chomp)
+  (local-set-key (kbd "C-c b") 'elisp-byte-compile-file))
 
 (defun hooks/eshell-mode ()
   (local-set-key (kbd "C-l") 'eshell-clear-buffer))
 
 (add-hook 'c-mode-hook		'hooks/c-mode)
 (add-hook 'go-mode-hook		'hooks/go-mode)
-(add-hook 'lisp-mode-hook	'hooks/lisp-mode)
+(add-hook 'emacs-lisp-mode-hook	'hooks/emacs-lisp-mode)
 (add-hook 'eshell-mode-hook	'hooks/eshell-mode)
 
 ;;;; window-system
