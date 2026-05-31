@@ -1,11 +1,7 @@
 ;; -*- mode: emacs-lisp; lexical-binding: t -*-
 
 ;;;; load my libraries (ref. https://github.com/gall0ws/elisp)
-(let ((load-prefer-newer t))
-  (mapc
-   (lambda (lib)
-     (load (file-name-concat "~/lib/elisp" lib)))
-   '("exec" "misc")))
+(mapc 'load (directory-files "~/lib/elisp" t "\\.elc$"))
 
 ;;;; default frame settings
 (add-to-list 'initial-frame-alist '(vertical-scroll-bars . nil))
