@@ -73,6 +73,13 @@ alias pstree='ps -axo user,pid,ppid,pgid,start,command | pstree -wg3 -f-'
 alias scrsaver='open /System/Library/CoreServices/ScreenSaverEngine.app'
 alias watch='watch -pt -n1'
 
+if [ "$TERM" = "dumb" ]; then
+    PAGER=more
+    MANPAGER=$PAGER
+    EDITOR=ed
+    export PAGER MANPAGER EDITOR
+fi
+
 type thefuck >/dev/null && eval $(thefuck --alias)
 
 PATH="$PATH:${HOME}/perl5/bin"
