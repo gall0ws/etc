@@ -102,9 +102,10 @@
   ((eshell-mode . hooks/eshell-mode)
    (eshell-directory-change . hooks/eshell-directory-change))
   :custom
+  (eshell-banner-message (format "\n%s\n" (shell-command-to-string "fortune")))
   (eshell-directory-name "~/lib/eshell")
   (eshell-visual-commands
-      '("mpv" "yt-dlp" "yt" "mtr" "typespeed" "watch" "vi"
+      '("mpv" "yt-dlp" "yt" "mtr" "topgrade" "typespeed" "watch" "vi"
 	"tmux" "top" "htop" "less" "more" "links" "ncftp"))
   (eshell-prompt-function
    (lambda ()
@@ -170,7 +171,14 @@
 
 (use-package helm
   :demand t
-  :config (helm-mode))
+  :config (helm-mode)
+  :custom
+  (helm-use-frame-when-no-suitable-window t)
+  (helm-use-frame-when-more-than-two-windows t))
+
+(use-package fancy-urls-menu
+  :defer t
+  :commands (fancy-urls-menu-list-urls))
 
 (use-package flycheck
   :defer t
@@ -235,6 +243,7 @@
 (global-set-key (kbd "C-c R") 'reread-buffer)
 (global-set-key (kbd "C-c S") 'eshell)
 (global-set-key (kbd "C-c T") 'vterm)
+(global-set-key (kbd "C-c U") 'fancy-urls-menu-list-urls)
 (global-set-key (kbd "C-c <") 'exec<)
 (global-set-key (kbd "C-c >") 'exec>)
 (global-set-key (kbd "C-c |") 'exec|)
@@ -371,9 +380,9 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:height 140 :family "Iosevka"))))
+ '(default ((t (:height 140 :family "Iosevka SS08"))))
  '(battery-load-critical ((t (:inherit error :inverse-video t))))
- '(font-lock-comment-face ((t (:inherit modus-themes-slant :foreground "#989898" :slant italic))))
- '(font-lock-doc-face ((t (:foreground "#9ac8e0" :slant italic))))
+ '(font-lock-comment-face ((t (:foreground "#989898" :slant italic :family "Iosevka"))))
+ '(font-lock-doc-face ((t (:foreground "#9ac8e0" :slant italic :family "Iosevka"))))
  '(ns-working-text-face ((t (:background "gold2" :foreground "black"))))
  '(variable-pitch ((t (:height 140 :width condensed :family "SF Pro")))))
