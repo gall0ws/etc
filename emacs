@@ -47,7 +47,7 @@
 	   ("PLAN9" (lambda () (file-name-concat (getenv "HOME") "9")) t t))
 	 (when (eq system-type 'darwin)
 	   '(("HOMEBREW_NO_AUTO_UPDATE" t t)
-	     ("HOMEBREW_EVAL_ALL" t t)
+	     ("HOMEBREW_REQUIRE_TAP_TRUST" t t)
 	     ("HOMEBREW_NO_ENV_HINTS" t t))))))
 
 (defun hooks/ns-system-appearance-change (appearance)
