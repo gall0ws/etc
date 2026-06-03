@@ -137,10 +137,10 @@
        ?b)		;; h split hori
       ((eq c ?w)
        ?m)		;; w swap
-      ((eq c ?0)
-       ?x)		;; k delete
-      ((eq c ?!)
-       ?o)		;; 0 delete other
+      ((or (eq c ?0) (eq c ?k))
+       ?x)		;; 0, k delete
+      ((eq c ?1)
+       ?o)		;; 1 delete other
       ((eq c ?b)
        ?j)		;; b select buffer
       (t c)))))
