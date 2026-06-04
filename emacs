@@ -15,6 +15,7 @@
 (menu-bar-mode (if (eq window-system 'ns) t -1))
 (pixel-scroll-mode (if window-system t -1))
 (savehist-mode)
+(tab-bar-mode)
 (tool-bar-mode -1)
 (xterm-mouse-mode (if window-system -1 t))
 
@@ -299,6 +300,20 @@
 (global-set-key (kbd "C-c s p") 'sort-paragraphs)
 (global-set-key (kbd "C-c s ?") 'describe-prefix-bindings)
 
+;; tab-bar: C-x t
+(global-set-key (kbd "C-x t b") 'tab-bar-switch-to-tab)
+(global-set-key (kbd "C-x t k") 'tab-bar-close-tab)
+(global-set-key (kbd "C-x t K") 'tab-bar-close-tab-by-name)
+(global-set-key (kbd "C-x t m") 'tab-bar-move-tab)
+(global-set-key (kbd "C-x t M") 'tab-bar-move-tab-backward)
+(global-set-key (kbd "C-x t n") 'tab-bar-switch-to-next-tab)
+(global-set-key (kbd "C-x t p") 'tab-bar-switch-to-prev-tab)
+(global-set-key (kbd "C-x t r") 'tab-bar-rename-tab)
+(global-set-key (kbd "C-x t R") 'tab-bar-rename-tab-by-name)
+(global-set-key (kbd "C-x t t") 'tab-bar-new-tab)
+(global-set-key (kbd "C-x t T") 'tab-bar-undo-close-tab)
+(global-set-key (kbd "C-x t ?") 'describe-prefix-bindings)
+
 ;;; misc
 (setq ns-pop-up-frames nil
       ns-right-alternate-modifier 'none)
@@ -373,6 +388,10 @@
  '(objc-font-lock-extra-types nil)
  '(query-replace-highlight t)
  '(require-final-newline t)
+ '(tab-bar-new-tab-choice 'scratch-buffer)
+ '(tab-bar-new-tab-to 'rightmost)
+ '(tab-bar-select-tab-modifiers '(super))
+ '(tab-bar-tab-hints t)
  '(term-suppress-hard-newline t))
 
 (custom-set-faces
