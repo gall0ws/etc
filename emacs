@@ -228,11 +228,9 @@
   :hook (vterm-mode . hooks/vterm-mode))
 
 ;;; bindings
-;; misc:
+;; remapped standard keys:
 (global-set-key (kbd "C-x C-b") 'ibuffer-list-buffers)
 (global-set-key (kbd "C-h") 'backward-delete-char-untabify)
-(global-set-key (kbd "s-x") 'execute-extended-command)
-(global-set-key (kbd "s-?") 'describe-prefix-bindings)
 
 ;; basics: C-c
 (global-set-key (kbd "C-c b") 'compile)
@@ -316,6 +314,72 @@
 (global-set-key (kbd "C-x t t") 'tab-bar-new-tab)
 (global-set-key (kbd "C-x t T") 'tab-bar-undo-close-tab)
 (global-set-key (kbd "C-x t ?") 'describe-prefix-bindings)
+
+;; macOS-friendly: s-
+(global-set-key (kbd "s-a") 'mark-whole-buffer)
+(global-set-key (kbd "s-b") 'compile)
+(global-set-key (kbd "s-B") 'browse-url-at-point)
+(global-set-key (kbd "s-d") 'dired)
+(global-set-key (kbd "s-D") 'dired-other-window)
+(global-set-key (kbd "s-e") 'eshell)
+(global-set-key (kbd "s-E") 'eshell-toggle)
+(global-set-key (kbd "s-f") 'isearch-forward)
+(global-set-key (kbd "s-F") 'isearch-backward)
+(global-set-key (kbd "s-C-f") 'isearch-forward-regexp)
+(global-set-key (kbd "s-C-F") 'isearch-backward-regexp)
+(global-set-key (kbd "s-g") 'magit)
+(global-set-key (kbd "s-h") 'help)
+(global-set-key (kbd "s-H") 'info-emacs-manual)
+(global-set-key (kbd "s-i") 'indent-region)
+(global-set-key (kbd "s-I") 'info)
+(global-set-key (kbd "s-k") 'kill-current-buffer)
+(global-set-key (kbd "s-l") 'goto-line)
+(global-set-key (kbd "s-m") 'move-to-char)
+(global-set-key (kbd "s-M") 'man)
+(global-set-key (kbd "s-C-m") 'mixed-pitch-mode)
+(global-set-key (kbd "s-n") 'scratch)
+(global-set-key (kbd "s-N") 'display-line-numbers-mode)
+(global-set-key (kbd "s-o") 'find-file)
+(global-set-key (kbd "s-O") 'find-alternate-file)
+(global-set-key (kbd "s-C-o") 'find-file-read-only)
+(global-set-key (kbd "s-p") 'project-dired)
+(global-set-key (kbd "s-q") 'save-buffers-kill-terminal)
+(global-set-key (kbd "s-Q") 'save-buffers-kill-emacs)
+(global-set-key (kbd "s-r") 'replace-string)
+(global-set-key (kbd "s-R") 'query-replace)
+(global-set-key (kbd "s-C-r") 'replace-regexp)
+(global-set-key (kbd "s-C-R") 'query-replace-regexp)
+(global-set-key (kbd "s-s") 'split-window-below)
+(global-set-key (kbd "s-S") 'split-window-right)
+(global-set-key (kbd "s-t") 'tab-bar-new-tab)
+(global-set-key (kbd "s-T") 'tab-bar-undo-close-tab)
+(global-set-key (kbd "s-u") 'vterm) ; u for unix
+(global-set-key (kbd "s-w") 'delete-window)
+(global-set-key (kbd "s-W") 'delete-frame)
+(global-set-key (kbd "s-C-w") 'tab-bar-close-tab)
+(global-set-key (kbd "s-x") 'execute-extended-command) ; sorry cut
+(global-set-key (kbd "s-y") 'ace-window) ; dunno y
+(global-set-key (kbd "s-Y") 'ace-swap-window)
+(global-set-key (kbd "s-z") 'undo)
+(global-set-key (kbd "s-Z") 'undo-redo)
+(global-set-key (kbd "s-=") 'balance-windows)
+(global-set-key (kbd "s-^") 'enlarge-window)
+(global-set-key (kbd "s-]") 'enlarge-window)
+(global-set-key (kbd "s-[") 'shrink-window)
+(global-set-key (kbd "s-}") 'enlarge-window-horizontally)
+(global-set-key (kbd "s-{") 'shrink-window-horizontally)
+(global-set-key (kbd "s-C-0") 'text-scale-adjust) ; s-0 is `tab-recent'
+(global-set-key (kbd "s--") 'text-scale-adjust)
+(global-set-key (kbd "s-+") 'text-scale-adjust)
+(global-set-key (kbd "s-,") 'customize-group)
+(global-set-key (kbd "s-`") 'next-window-any-frame)
+(global-set-key (kbd "s-~") 'previous-window-any-frame)
+(global-set-key (kbd "s-:") 'eval-expression)
+(global-set-key (kbd "s-|") 'exec|)
+(global-set-key (kbd "s-!") 'exec!)
+(global-set-key (kbd "s-<") 'exec<)
+(global-set-key (kbd "s->") 'exec>)
+(global-set-key (kbd "s-?") 'describe-prefix-bindings)
 
 ;;; misc
 (setq ns-pop-up-frames nil
