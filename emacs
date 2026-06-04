@@ -206,6 +206,9 @@
   :hook hooks/mixed-pitch-mode
   :custom (mixed-pitch-variable-pitch-cursor 'box))
 
+(use-package scratch
+  demand: t)
+
 (use-package slime
   :defer t
   :commands (slime)
@@ -234,6 +237,7 @@
 (global-set-key (kbd "C-c C") 'chomp)
 (global-set-key (kbd "C-c i") 'indent-region)
 (global-set-key (kbd "C-c l") 'goto-line)
+(global-set-key (kbd "C-c n") 'scratch)
 (global-set-key (kbd "C-c N") 'display-line-numbers-mode)
 (global-set-key (kbd "C-c m") 'move-to-char)
 (global-set-key (kbd "C-c M") 'man)
@@ -241,6 +245,7 @@
 (global-set-key (kbd "C-c R") 'reread-buffer)
 (global-set-key (kbd "C-c S") 'eshell)
 (global-set-key (kbd "C-c T") 'vterm)
+(global-set-key (kbd "C-c *") 'scratch-buffer)
 (global-set-key (kbd "C-c <") 'exec<)
 (global-set-key (kbd "C-c >") 'exec>)
 (global-set-key (kbd "C-c |") 'exec|)
@@ -357,6 +362,7 @@
 (global-set-key (kbd "s-Y") 'ace-swap-window)
 (global-set-key (kbd "s-z") 'undo)
 (global-set-key (kbd "s-Z") 'undo-redo)
+(global-set-key (kbd "s-*") 'scratch-buffer)
 (global-set-key (kbd "s-=") 'balance-windows)
 (global-set-key (kbd "s-^") 'enlarge-window)
 (global-set-key (kbd "s-]") 'enlarge-window)
@@ -428,6 +434,11 @@
  '(mouse-drag-and-drop-region 'meta)
  '(next-line-add-newlines nil)
  '(objc-font-lock-extra-types nil)
+ '(package-selected-packages
+   '(ace-window company dired-quick-sort eshell-toggle eshell-vterm
+                exec-path-from-shell go-mode helm lua-mode magit
+                mixed-pitch ns-auto-titlebar scratch slime swift-mode
+                tide typescript-mode))
  '(project-mode-line t)
  '(query-replace-highlight t)
  '(require-final-newline t)
