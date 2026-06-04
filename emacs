@@ -315,7 +315,7 @@
 (global-set-key (kbd "C-x t T") 'tab-bar-undo-close-tab)
 (global-set-key (kbd "C-x t ?") 'describe-prefix-bindings)
 
-;; macOS-friendly: s-
+;; macOS-friendly basics: s-
 (global-set-key (kbd "s-a") 'mark-whole-buffer)
 (global-set-key (kbd "s-b") 'compile)
 (global-set-key (kbd "s-B") 'browse-url-at-point)
@@ -342,7 +342,6 @@
 (global-set-key (kbd "s-o") 'find-file)
 (global-set-key (kbd "s-O") 'find-alternate-file)
 (global-set-key (kbd "s-C-o") 'find-file-read-only)
-(global-set-key (kbd "s-p") 'project-dired)
 (global-set-key (kbd "s-q") 'save-buffers-kill-terminal)
 (global-set-key (kbd "s-Q") 'save-buffers-kill-emacs)
 (global-set-key (kbd "s-r") 'replace-string)
@@ -381,6 +380,24 @@
 (global-set-key (kbd "s-<") 'exec<)
 (global-set-key (kbd "s->") 'exec>)
 (global-set-key (kbd "s-?") 'describe-prefix-bindings)
+
+;; macOS-friendly project: s-p
+(unbind-key (kbd "s-p") global-map)
+(global-set-key (kbd "s-p f") 'project-find-file)
+(global-set-key (kbd "s-p g") 'project-find-regexp)
+(global-set-key (kbd "s-p r") 'project-query-replace-regexp)
+(global-set-key (kbd "s-p D") 'project-dired)
+(global-set-key (kbd "s-p v") 'project-vc-dir)
+(global-set-key (kbd "s-p s") 'project-shell)
+(global-set-key (kbd "s-p e") 'project-eshell)
+(global-set-key (kbd "s-p c") 'project-compile)
+(global-set-key (kbd "s-p c") 'project-shell-command)
+(global-set-key (kbd "s-p &") 'project-async-shell-command)
+(global-set-key (kbd "s-p o") 'project-any-command)
+(global-set-key (kbd "s-p b") 'project-switch-to-buffer)
+(global-set-key (kbd "s-p k") 'project-kill-buffers)
+(global-set-key (kbd "s-p p") 'project-switch-project)
+(global-set-key (kbd "s-p ?") 'describe-prefix-bindings)
 
 ;;; misc
 (setq ns-pop-up-frames nil
