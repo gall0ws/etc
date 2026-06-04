@@ -179,10 +179,6 @@
   (helm-use-frame-when-no-suitable-window t)
   (helm-use-frame-when-more-than-two-windows t))
 
-(use-package fancy-urls-menu
-  :defer t
-  :commands (fancy-urls-menu-list-urls))
-
 (use-package flycheck
   :defer t
   :commands (flycheck-mode))
@@ -245,7 +241,6 @@
 (global-set-key (kbd "C-c R") 'reread-buffer)
 (global-set-key (kbd "C-c S") 'eshell)
 (global-set-key (kbd "C-c T") 'vterm)
-(global-set-key (kbd "C-c U") 'fancy-urls-menu-list-urls)
 (global-set-key (kbd "C-c <") 'exec<)
 (global-set-key (kbd "C-c >") 'exec>)
 (global-set-key (kbd "C-c |") 'exec|)
