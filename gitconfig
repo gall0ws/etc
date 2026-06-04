@@ -12,3 +12,5 @@ ci = commit
 br = branch
 di = diff
 co = checkout
+[github]
+	user = gall0ws
