@@ -9,6 +9,7 @@
 (add-to-list 'initial-frame-alist '(vertical-scroll-bars . nil))
 
 ;;; global minor modes (emacs standard, no packages)
+(context-menu-mode)
 (desktop-save-mode (if window-system t -1))
 (display-battery-mode)
 (indent-tabs-mode)
@@ -31,6 +32,7 @@
   (flycheck-mode))
 
 (defun hooks/emacs-lisp-mode ()
+  (indent-tabs-mode -1)
   (add-hook-local 'before-save-hook 'chomp)
   (local-set-key (kbd "C-c b") 'elisp-byte-compile-file))
 
@@ -106,8 +108,8 @@
   (eshell-banner-message (format "\n%s\n" (shell-command-to-string "fortune")))
   (eshell-directory-name "~/lib/eshell")
   (eshell-visual-commands
-      '("mpv" "yt-dlp" "yt" "mtr" "topgrade" "typespeed" "watch" "vi"
-	"tmux" "top" "htop" "less" "more" "links" "ncftp"))
+      '("mdv" "mpv" "yt-dlp" "yt" "mtr" "topgrade" "typespeed" "watch"
+        "vi" "tmux" "top" "htop" "less" "more" "links" "ncftp"))
   (eshell-prompt-function
    (lambda ()
      (string-join
@@ -227,6 +229,7 @@
 
 ;;; bindings
 ;; misc:
+(global-set-key (kbd "C-x C-b") 'ibuffer-list-buffers)
 (global-set-key (kbd "C-h") 'backward-delete-char-untabify)
 (global-set-key (kbd "s-x") 'execute-extended-command)
 (global-set-key (kbd "s-?") 'describe-prefix-bindings)
@@ -346,28 +349,7 @@
  '(column-number-mode t)
  '(compilation-message-face 'underline)
  '(compile-auto-highlight t)
- '(compile-command "make -s ")
- '(custom-safe-themes
-   '("d5fd482fcb0fe42e849caba275a01d4925e422963d1cd165565b31d3f4189c87"
-     "5aedf993c7220cbbe66a410334239521d8ba91e1815f6ebde59cecc2355d7757"
-     "18a1d83b4e16993189749494d75e6adb0e15452c80c431aca4a867bcc8890ca9"
-     "d8011e6c2919f4edfbc233664d9e404e2a2b89483bc8b75011b379c41a82efdf"
-     "deb645f30fd25191b6e8d0f397cc1dd172a352f22094747be2ff527394cc9f57"
-     "51fa6edfd6c8a4defc2681e4c438caf24908854c12ea12a1fbfd4d055a9647a3"
-     "8363207a952efb78e917230f5a4d3326b2916c63237c1f61d7e5fe07def8d378"
-     "147093cd93a68c202caa79635399cc5f6a8cd028bb1ca037a4d4a095b28cb167"
-     "72ed8b6bffe0bfa8d097810649fd57d2b598deef47c992920aef8b5d9599eefe"
-     "5a0ddbd75929d24f5ef34944d78789c6c3421aa943c15218bac791c199fc897d"
-     "6b5c518d1c250a8ce17463b7e435e9e20faa84f3f7defba8b579d4f5925f60c1"
-     "d14f3df28603e9517eb8fb7518b662d653b25b26e83bd8e129acea042b774298"
-     "7661b762556018a44a29477b84757994d8386d6edee909409fabe0631952dad9"
-     "4cf9ed30ea575fb0ca3cff6ef34b1b87192965245776afa9e9e20c17d115f3fb"
-     "939ea070fb0141cd035608b2baabc4bd50d8ecc86af8528df9d41f4d83664c6a"
-     "387b487737860e18cbb92d83a42616a67c1edfd0664d521940e7fbf049c315ae"
-     "57e3f215bef8784157991c4957965aa31bac935aca011b29d7d8e113a652b693"
-     "aded61687237d1dff6325edb492bde536f40b048eab7246c61d5c6643c696b7f"
-     "b89ae2d35d2e18e4286c8be8aaecb41022c1a306070f64a66fd114310ade88aa"
-     default))
+ '(compile-command "CC=clang make ")
  '(default-truncate-lines nil t)
  '(dired-kill-when-opening-new-dired-buffer t)
  '(display-hourglass t)
@@ -377,6 +359,7 @@
  '(explicit-shell-file-name nil)
  '(face-font-family-alternatives nil)
  '(focus-follows-mouse t)
+ '(helm-candidate-number-limit 100)
  '(hourglass-delay 0)
  '(inhibit-startup-screen t)
  '(insert-directory-program (if (eq system-type 'gnu/linux) "ls" "gls"))
@@ -386,6 +369,7 @@
  '(mouse-drag-and-drop-region 'meta)
  '(next-line-add-newlines nil)
  '(objc-font-lock-extra-types nil)
+ '(project-mode-line t)
  '(query-replace-highlight t)
  '(require-final-newline t)
  '(tab-bar-new-tab-choice 'scratch-buffer)
