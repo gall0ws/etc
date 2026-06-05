@@ -471,7 +471,14 @@
  '(tab-bar-new-tab-choice 'scratch-buffer)
  '(tab-bar-new-tab-to 'rightmost)
  '(tab-bar-select-tab-modifiers '(super))
- '(tab-bar-tab-hints t)
+ '(tab-bar-tab-name-format-functions
+   '((lambda (name _ idx)
+       (format "%c%d %s"
+               (if (< idx 9)
+                   (char-from-name "PLACE OF INTEREST SIGN")
+                 32)
+               idx name))
+     tab-bar-tab-name-format-close-button tab-bar-tab-name-format-face))
  '(term-suppress-hard-newline t))
 
 (custom-set-faces
