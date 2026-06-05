@@ -103,6 +103,7 @@
 (use-package eshell
   :hook
   ((eshell-mode . hooks/eshell-mode)
+   (eshell-mode . hooks/eshell-directory-change)
    (eshell-directory-change . hooks/eshell-directory-change))
   :custom
   (eshell-banner-message (format "\n%s\n" (shell-command-to-string "fortune")))
@@ -167,15 +168,17 @@
   :commands (eshell)
   :after vterm)
 
-(use-package exec-path-from-shell
-  :if (eq system-type 'darwin)
-  :config
-  (exec-path-from-shell-initialize))
+(when (eq system-type 'darwin)
+  (use-package exec-path-from-shell
+    :config
+    (exec-path-from-shell-initialize)))
 
 (use-package helm
   :demand t
   :config (helm-mode)
   :custom
+  (helm-display-buffer-width 140)
+  (helm-candidate-number-limit 100)
   (helm-use-frame-when-no-suitable-window t)
   (helm-use-frame-when-more-than-two-windows t))
 
@@ -188,13 +191,13 @@
   :commands (go-mode)
   :hook (go-mode . hooks/go-mode))
 
-(use-package gruvbox-theme
-  :when (eq 'window-system 'x)
-  :config (load-theme 'gruvbox-dark-hard t))
+(when (eq window-system 'x)
+  (use-package gruvbox-theme
+    :config (load-theme 'gruvbox-dark-hard t)))
 
-(use-package ns-auto-titlebar
-  :if (eq window-system 'ns)
-  :config (ns-auto-titlebar-mode))
+(when (eq window-system 'ns)
+  (use-package ns-auto-titlebar
+    :config (ns-auto-titlebar-mode)))
 
 (use-package magit
   :defer t
@@ -207,7 +210,7 @@
   :custom (mixed-pitch-variable-pitch-cursor 'box))
 
 (use-package scratch
-  demand: t)
+  :demand t)
 
 (use-package slime
   :defer t
@@ -382,7 +385,7 @@
 (global-set-key (kbd "s-?") 'describe-prefix-bindings)
 
 ;; macOS-friendly project: s-p
-(unbind-key (kbd "s-p") global-map)
+(unbind-key (kbd "s-p"))
 (global-set-key (kbd "s-p f") 'project-find-file)
 (global-set-key (kbd "s-p g") 'project-find-regexp)
 (global-set-key (kbd "s-p r") 'project-query-replace-regexp)
@@ -441,7 +444,6 @@
  '(explicit-shell-file-name nil)
  '(face-font-family-alternatives nil)
  '(focus-follows-mouse t)
- '(helm-candidate-number-limit 100)
  '(hourglass-delay 0)
  '(inhibit-startup-screen t)
  '(insert-directory-program (if (eq system-type 'gnu/linux) "ls" "gls"))
@@ -453,10 +455,17 @@
  '(objc-font-lock-extra-types nil)
  '(package-selected-packages
    '(ace-window company dired-quick-sort eshell-toggle eshell-vterm
-                exec-path-from-shell go-mode helm lua-mode magit
-                mixed-pitch ns-auto-titlebar scratch slime swift-mode
-                tide typescript-mode))
+                exec-path-from-shell flycheck forge go-mode helm
+                lua-mode mixed-pitch ns-auto-titlebar scratch slime
+                swift-mode typescript-mode))
  '(project-mode-line t)
+ '(project-switch-commands
+   '((project-find-file "Find file" nil)
+     (project-find-regexp "Find regexp" nil)
+     (project-find-dir "Find directory" nil)
+     (project-vc-dir "VC-Dir" nil) (project-eshell "Eshell" nil)
+     (project-any-command "Other" nil)
+     (magit-project-status "Magit" nil)))
  '(query-replace-highlight t)
  '(require-final-newline t)
  '(tab-bar-new-tab-choice 'scratch-buffer)
