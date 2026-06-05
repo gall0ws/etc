@@ -52,13 +52,14 @@ fi
 
 type lsd >/dev/null && {
     alias ls='lsd --config-file=$HOME/etc/lsd.yaml'
-    alias lst='ls --tree'
 }
 alias la='ls -a'
 alias lA='ls -A'
 alias ll='ls -l'
 alias lla='ll -a'
 alias llA='ll -A'
+alias lst='tree'
+alias tree='tree --noreport --dirsfirst -C --opt-toggle'
 
 alias bootout="sudo launchctl bootout user/`id -u`"
 alias convert='magick'
@@ -71,7 +72,7 @@ alias ldd='otool -L'
 alias ping='ping -i.5 -a'
 alias pstree='ps -axo user,pid,ppid,pgid,start,command | pstree -wg3 -f-'
 alias scrsaver='open /System/Library/CoreServices/ScreenSaverEngine.app'
-alias watch='watch -pt -n1'
+alias watch='watch -ptd -n1'
 
 if [ "$TERM" = "dumb" ]; then
     PAGER=more
