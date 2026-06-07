@@ -34,7 +34,8 @@
 (defun hooks/emacs-lisp-mode ()
   (indent-tabs-mode -1)
   (add-hook-local 'before-save-hook 'chomp)
-  (local-set-key (kbd "C-c b") 'elisp-byte-compile-file))
+  (local-set-key (kbd "C-c c") 'elisp-byte-compile-file)
+  (local-set-key (kbd "s-c") 'elisp-byte-compile-file))
 
 (defun hooks/eshell-mode ()
   ;; I know there's `eshell-rebind' module, but I don't like it.
