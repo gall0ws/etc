@@ -126,12 +126,12 @@
 
 (use-package ace-window
   :demand t
+  :config (when window-system (ace-window-posframe-mode))
   :custom-face
   (aw-leading-char-face ((t (:inherit variable-pitch
 				      :foreground "#ff5f5f"
 				      :weight bold :height 400))))
   :custom
-  (ace-window-posframe-mode)
   (aw-dispatch-always t)
   (aw-translate-char-function
    (lambda (c)
@@ -144,8 +144,6 @@
        ?m)		;; w swap
       ((or (eq c ?0) (eq c ?k))
        ?x)		;; 0, k delete
-      ((eq c ?1)
-       ?o)		;; 1 delete other
       ((eq c ?b)
        ?j)		;; b select buffer
       (t c)))))
