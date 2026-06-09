@@ -45,14 +45,14 @@
   (company-mode -1)
   (eshell-vterm-mode)
   (mapc (lambda (env)
-	  (add-to-list 'eshell-variable-aliases-list env))
-	(append
-	 '(("TERM" (lambda() "xterm-256color") t t)
-	   ("PLAN9" (lambda () (file-name-concat (getenv "HOME") "9")) t t))
-	 (when (eq system-type 'darwin)
-	   '(("HOMEBREW_NO_AUTO_UPDATE" t t)
-	     ("HOMEBREW_REQUIRE_TAP_TRUST" t t)
-	     ("HOMEBREW_NO_ENV_HINTS" t t))))))
+          (add-to-list 'eshell-variable-aliases-list env))
+        (append
+         '(("TERM" (lambda() "xterm-256color") t t)
+           ("PLAN9" (lambda () (file-name-concat (getenv "HOME") "9")) t t))
+         (when (eq system-type 'darwin)
+           '(("HOMEBREW_NO_AUTO_UPDATE" t t)
+             ("HOMEBREW_REQUIRE_TAP_TRUST" t t)
+             ("HOMEBREW_NO_ENV_HINTS" t t))))))
 
 (defun hooks/ns-system-appearance-change (appearance)
   (pcase appearance
@@ -84,6 +84,7 @@
 (add-hook 'c-mode-hook 'hooks/c-mode)
 (add-hook 'emacs-lisp-mode-hook 'hooks/emacs-lisp-mode)
 (add-hook 'help-mode-hook 'mixed-pitch-mode)
+(add-hook 'markdown-mode-hook 'visual-line-mode)
 (add-hook 'ns-system-appearance-change-functions 'hooks/ns-system-appearance-change)
 
 ;;; packages
@@ -110,27 +111,26 @@
   (eshell-banner-message (format "\n%s\n" (shell-command-to-string "fortune")))
   (eshell-directory-name "~/lib/eshell")
   (eshell-visual-commands
-      '("mdv" "mpv" "yt-dlp" "yt" "mtr" "topgrade" "typespeed" "watch"
+      '("mdv" "mpv" "yt-dlp" "yt" "mtr" "topgrade" "typespeed" "watch" "wget"
         "vi" "tmux" "top" "htop" "less" "more" "links" "ncftp"))
   (eshell-prompt-function
    (lambda ()
-     (string-join
-      (list
-       (unless (eshell-exit-success-p)
-	 (format "[%d] " eshell-last-command-status))
-       (format "%c %s %c"
-	       (char-from-name "MATHEMATICAL LEFT ANGLE BRACKET")
-	       (abbreviate-file-name (eshell/pwd))
-	       (char-from-name "MATHEMATICAL RIGHT ANGLE BRACKET"))
-       (if (eq (file-user-uid) 0) " # " " λ "))))))
+     (concat
+      (unless (eshell-exit-success-p)
+        (format "[%d] " eshell-last-command-status))
+      (format "%c %s %c %c "
+              (char-from-name "MATHEMATICAL LEFT ANGLE BRACKET")
+              (file-name-base (abbreviate-file-name (eshell/pwd)))
+              (char-from-name "MATHEMATICAL RIGHT ANGLE BRACKET")
+              (char-from-name "GREEK SMALL LETTER LAMBDA"))))))
 
 (use-package ace-window
   :demand t
   :config (when window-system (ace-window-posframe-mode))
   :custom-face
   (aw-leading-char-face ((t (:inherit variable-pitch
-				      :foreground "#ff5f5f"
-				      :weight bold :height 400))))
+                                      :foreground "#ff5f5f"
+                                      :weight bold :height 400))))
   :custom
   (aw-dispatch-always t)
   (aw-translate-char-function
@@ -176,8 +176,8 @@
   :demand t
   :config (helm-mode)
   :custom
+  (helm-autoresize-mode t)
   (helm-display-buffer-width 140)
-  (helm-candidate-number-limit 100)
   (helm-use-frame-when-no-suitable-window t)
   (helm-use-frame-when-more-than-two-windows t))
 
@@ -329,7 +329,7 @@
 (global-set-key (kbd "s-f") 'isearch-forward)
 (global-set-key (kbd "s-F") 'isearch-backward)
 (global-set-key (kbd "s-C-f") 'isearch-forward-regexp)
-(global-set-key (kbd "s-C-F") 'isearch-backward-regexp)
+(global-set-key (kbd "s-C-S-f") 'isearch-backward-regexp)
 (global-set-key (kbd "s-g") 'magit)
 (global-set-key (kbd "s-h") 'help)
 (global-set-key (kbd "s-H") 'info-emacs-manual)
@@ -350,7 +350,7 @@
 (global-set-key (kbd "s-r") 'replace-string)
 (global-set-key (kbd "s-R") 'query-replace)
 (global-set-key (kbd "s-C-r") 'replace-regexp)
-(global-set-key (kbd "s-C-R") 'query-replace-regexp)
+(global-set-key (kbd "s-C-S-r") 'query-replace-regexp)
 (global-set-key (kbd "s-s") 'split-window-below)
 (global-set-key (kbd "s-S") 'split-window-right)
 (global-set-key (kbd "s-t") 'tab-bar-new-tab)
@@ -440,13 +440,17 @@
  '(column-number-mode t)
  '(compilation-message-face 'underline)
  '(compile-auto-highlight t)
- '(compile-command "CC=clang make ")
+ '(compile-command "make -k ")
  '(default-truncate-lines nil t)
  '(dired-kill-when-opening-new-dired-buffer t)
  '(display-hourglass t)
- '(display-time-24hr-format t)
- '(display-time-default-load-average nil)
+ '(display-time-day-and-date t)
+ '(display-time-mode t)
+ '(display-time-string-forms '((format-time-string " %H:%M" now)))
  '(electric-indent-mode nil)
+ '(eww-auto-rename-buffer 'title)
+ '(eww-form-checkbox-selected-symbol "☑")
+ '(eww-form-checkbox-symbol "☐")
  '(explicit-shell-file-name nil)
  '(face-font-family-alternatives nil)
  '(focus-follows-mouse t)
@@ -483,8 +487,7 @@
  '(tab-bar-tab-name-format-functions
    '((lambda (name _ idx)
        (format "%c%d %s"
-               (if (< idx 9)
-                   (char-from-name "PLACE OF INTEREST SIGN")
+               (if (< idx 9) (char-from-name "PLACE OF INTEREST SIGN")
                  32)
                idx name))
      tab-bar-tab-name-format-close-button tab-bar-tab-name-format-face))
