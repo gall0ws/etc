@@ -55,11 +55,12 @@
              ("HOMEBREW_NO_ENV_HINTS" t t))))))
 
 (defun hooks/ns-system-appearance-change (appearance)
-  (pcase appearance
-    ('light (load-theme 'modus-operandi t))
-    ('dark  (load-theme 'modus-vivendi  t))))
+  (load-theme
+   (if (eq appearance 'light)
+       'spacemacs-light
+     'spacemacs-dark) t))
 
-(declare-function eshell/pwd "em-dirs.el")
+(declare-function eshell/pwd "em-dirs.el" ())
 
 (defun hooks/eshell-directory-change ()
   (rename-buffer
@@ -76,6 +77,8 @@
   (add-to-list 'mixed-pitch-fixed-pitch-faces 'widget-field))
 
 (defun hooks/vterm-mode ()
+  (local-set-key (kbd "C-c c") 'vterm-copy-mode)
+  (local-set-key (kbd "s-c") 'vterm-copy-mode)
   (company-mode -1))
 
 ;; note: hooks for external packages are defined in use-package declaration
