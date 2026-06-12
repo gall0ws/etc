@@ -211,6 +211,25 @@
 (use-package scratch
   :demand t)
 
+(use-package simple-modeline
+  :demand t
+  :config (simple-modeline-mode)
+  :custom
+  (simple-modeline-segments
+   '((simple-modeline-segment-modified
+      simple-modeline-segment-buffer-name
+      simple-modeline-segment-position
+      project-mode-line-format
+      simple-modeline-segment-vc)
+     (simple-modeline-segment-process
+      simple-modeline-segment-major-mode
+      ;simple-modeline-segment-minor-modes
+      simple-modeline-segment-input-method
+      simple-modeline-segment-eol
+      simple-modeline-segment-encoding
+      simple-modeline-segment-misc-info
+      (lambda()" ")))))
+
 (use-package slime
   :defer t
   :commands (slime)
@@ -424,6 +443,7 @@
  '(ansi-color-faces-vector
    [default default default italic underline success warning error])
  '(auth-source-save-behavior nil)
+ '(battery-mode-line-format (format "[%%b%%p%c]" (char-from-name "FULLWIDTH PERCENT SIGN")))
  '(blink-cursor-mode nil)
  '(c-basic-offset 'set-from-style)
  '(c-default-style
@@ -446,7 +466,7 @@
  '(display-hourglass t)
  '(display-time-day-and-date t)
  '(display-time-mode t)
- '(display-time-string-forms '((format-time-string " %H:%M" now)))
+ '(display-time-string-forms '((format-time-string " %H:%M " now)))
  '(electric-indent-mode nil)
  '(eww-auto-rename-buffer 'title)
  '(eww-form-checkbox-selected-symbol "☑")
