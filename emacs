@@ -256,6 +256,12 @@
   (slime-kill-without-query-p t)
   (slime-net-coding-system 'utf-8-unix))
 
+(use-package typescript-mode
+  :defer t
+  :mode (("\\.tsx$" . typescript-mode))
+  :config
+  (indent-tabs-mode -1))
+
 (use-package vterm
   :ensure
   :defer t
