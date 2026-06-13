@@ -91,9 +91,7 @@
 (add-hook 'ns-system-appearance-change-functions 'hooks/ns-system-appearance-change)
 
 ;;; packages
-(setq use-package-always-ensure t
-      package-install-upgrade-built-in t)
-
+(setq package-install-upgrade-built-in t)
 (package-initialize)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
 
@@ -128,6 +126,7 @@
               (char-from-name "GREEK SMALL LETTER LAMBDA"))))))
 
 (use-package ace-window
+  :ensure
   :demand t
   :config (when window-system (ace-window-posframe-mode))
   :custom-face
@@ -152,6 +151,7 @@
       (t c)))))
 
 (use-package company
+  :ensure
   :demand t
   :config (global-company-mode))
 
@@ -163,19 +163,24 @@
   (dired-quick-sort-setup))
 
 (use-package eshell-toggle
-  :bind ("C-c E" . eshell-toggle))
+  :bind
+  ("C-c E" . eshell-toggle)
+  ("s-E" . eshell-toggle))
 
 (use-package eshell-vterm
+  :ensure
   :defer t
   :commands (eshell)
   :after vterm)
 
 (when (eq system-type 'darwin)
   (use-package exec-path-from-shell
+    :ensure
     :config
     (exec-path-from-shell-initialize)))
 
 (use-package helm
+  :ensure
   :demand t
   :config (helm-mode)
   :custom
@@ -185,6 +190,7 @@
   (helm-use-frame-when-more-than-two-windows t))
 
 (use-package flycheck
+  :ensure
   :defer t
   :commands (flycheck-mode))
 
@@ -195,10 +201,12 @@
 
 (when (eq window-system 'x)
   (use-package gruvbox-theme
+    :ensure
     :config (load-theme 'gruvbox-dark-hard t)))
 
 (when (eq window-system 'ns)
   (use-package ns-auto-titlebar
+    :ensure
     :config (ns-auto-titlebar-mode)))
 
 (use-package magit
@@ -206,15 +214,18 @@
   :commands (magit))
 
 (use-package mixed-pitch
+  :ensure
   :defer t
   :commands (mixed-pitch-mode)
   :hook hooks/mixed-pitch-mode
   :custom (mixed-pitch-variable-pitch-cursor 'box))
 
 (use-package scratch
+  :ensure
   :demand t)
 
 (use-package simple-modeline
+  :ensure
   :demand t
   :config (simple-modeline-mode)
   :custom
@@ -246,6 +257,7 @@
   (slime-net-coding-system 'utf-8-unix))
 
 (use-package vterm
+  :ensure
   :defer t
   :commands (vterm eshell-vterm-mode)
   :hook (vterm-mode . hooks/vterm-mode))
@@ -347,7 +359,6 @@
 (global-set-key (kbd "s-d") 'dired)
 (global-set-key (kbd "s-D") 'dired-other-window)
 (global-set-key (kbd "s-e") 'eshell)
-(global-set-key (kbd "s-E") 'eshell-toggle)
 (global-set-key (kbd "s-f") 'isearch-forward)
 (global-set-key (kbd "s-F") 'isearch-backward)
 (global-set-key (kbd "s-C-f") 'isearch-forward-regexp)
@@ -446,7 +457,8 @@
  '(ansi-color-faces-vector
    [default default default italic underline success warning error])
  '(auth-source-save-behavior nil)
- '(battery-mode-line-format (format "[%%b%%p%c]" (char-from-name "FULLWIDTH PERCENT SIGN")))
+ '(battery-mode-line-format
+   (format "[%%b%%p%c]" (char-from-name "FULLWIDTH PERCENT SIGN")))
  '(blink-cursor-mode nil)
  '(c-basic-offset 'set-from-style)
  '(c-default-style
