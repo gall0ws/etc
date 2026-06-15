@@ -44,7 +44,6 @@
   (local-set-key (kbd "C-c z") 'eshell-job-stop)
   (local-set-key (kbd "<deletechar>") 'eshell-interrupt-process) ; 9term style
   (company-mode -1)
-  (eshell-vterm-mode)
   (mapc (lambda (env)
           (add-to-list 'eshell-variable-aliases-list env))
         (append
@@ -55,18 +54,18 @@
              ("HOMEBREW_REQUIRE_TAP_TRUST" t t)
              ("HOMEBREW_NO_ENV_HINTS" t t))))))
 
-(defun hooks/ns-system-appearance-change (appearance)
-  (load-theme
-   (if (eq appearance 'light)
-       'spacemacs-light
-     'spacemacs-dark) t))
-
 (declare-function eshell/pwd "em-dirs.el" ())
 
 (defun hooks/eshell-directory-change ()
   (rename-buffer
    (format "*et%s*" (string-replace "/" ":" (eshell/pwd)))
    t))
+
+(defun hooks/ns-system-appearance-change (appearance)
+  (load-theme
+   (if (eq appearance 'light)
+       'spacemacs-light
+     'spacemacs-dark) t))
 
 (defun hooks/go-mode ()
   (local-set-key (kbd "C-c d") 'godoc)
@@ -110,11 +109,17 @@
    (eshell-mode . hooks/eshell-directory-change)
    (eshell-directory-change . hooks/eshell-directory-change))
   :custom
-  (eshell-banner-message (format "\n%s\n" (shell-command-to-string "fortune")))
   (eshell-directory-name "~/lib/eshell")
   (eshell-visual-commands
       '("mdv" "mpv" "yt-dlp" "yt" "mtr" "topgrade" "typespeed" "watch" "wget"
         "vi" "tmux" "top" "htop" "less" "more" "links" "ncftp"))
+  (eshell-modules-list
+   '(eshell-alias eshell-basic eshell-cmpl eshell-dirs eshell-extpipe
+                  eshell-glob eshell-hist eshell-ls eshell-pred
+                  eshell-prompt eshell-script eshell-smart eshell-term
+                  eshell-unix eshell-xtra))
+  (eshell-review-quick-commands 'not-even-short-output)
+  (eshell-vterm-mode t)
   (eshell-prompt-function
    (lambda ()
      (concat
