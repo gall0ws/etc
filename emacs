@@ -506,8 +506,9 @@
  '(package-selected-packages
    '(ace-window company dired-quick-sort eshell-toggle eshell-vterm
                 exec-path-from-shell flycheck forge go-mode helm
-                lua-mode mixed-pitch ns-auto-titlebar scratch slime
-                swift-mode typescript-mode))
+                lua-mode mixed-pitch ns-auto-titlebar scratch
+                simple-modeline slime spacemacs-theme swift-mode
+                typescript-mode))
  '(project-mode-line t)
  '(project-switch-commands
    '((project-find-file "Find file" nil)
