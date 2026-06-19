@@ -76,6 +76,9 @@
 (defun hooks/mixed-pitch-mode ()
   (add-to-list 'mixed-pitch-fixed-pitch-faces 'widget-field))
 
+(defun hooks/org-mode ()
+  (local-set-key (kbd "s-<return>") 'org-open-at-point))
+
 (defun hooks/vterm-mode ()
   (local-set-key (kbd "C-c c") 'vterm-copy-mode)
   (local-set-key (kbd "s-c") 'vterm-copy-mode)
@@ -89,6 +92,7 @@
 (add-hook 'help-mode-hook 'mixed-pitch-mode)
 (add-hook 'markdown-mode-hook 'visual-line-mode)
 (add-hook 'ns-system-appearance-change-functions 'hooks/ns-system-appearance-change)
+(add-hook 'org-mode-hook 'hooks/org-mode)
 
 ;;; packages
 (setq package-install-upgrade-built-in t)
@@ -127,7 +131,7 @@
         (format "[%d] " eshell-last-command-status))
       (format "%c %s %c %c "
               (char-from-name "MATHEMATICAL LEFT ANGLE BRACKET")
-              (file-name-base (abbreviate-file-name (eshell/pwd)))
+              (file-name-nondirectory (abbreviate-file-name (eshell/pwd)))
               (char-from-name "MATHEMATICAL RIGHT ANGLE BRACKET")
               (char-from-name "GREEK SMALL LETTER LAMBDA"))))))
 
@@ -344,7 +348,11 @@
 ;; macOS-friendly basics: s-
 (global-set-key (kbd "s-a") 'mark-whole-buffer)
 (global-set-key (kbd "s-b") 'switch-to-buffer)
-(global-set-key (kbd "s-B") 'browse-url-at-point)
+(global-set-key (kbd "s-B j") 'bookmark-jump)
+(global-set-key (kbd "s-B J") 'bookmark-jump-other-window)
+(global-set-key (kbd "s-B l") 'bookmark-bmenu-list)
+(global-set-key (kbd "s-B s") 'bookmark-set)
+(global-set-key (kbd "s-B S") 'bookmark-set-no-overwrite)
 (global-set-key (kbd "s-c") 'compile)
 (global-set-key (kbd "s-C") 'comment-region)
 (global-set-key (kbd "s-d") 'dired)
@@ -539,8 +547,8 @@
  ;; If there is more than one, they won't work right.
  '(default ((t (:height 140 :family "Iosevka SS08"))))
  '(battery-load-critical ((t (:inherit error :inverse-video t))))
- '(font-lock-comment-face ((t (:foreground "#989898" :slant italic :family "Iosevka"))))
- '(font-lock-doc-face ((t (:foreground "#9ac8e0" :slant italic :family "Iosevka"))))
+ '(font-lock-comment-face ((t (:slant italic :family "Iosevka"))))
+ '(font-lock-doc-face ((t (:slant italic :family "Iosevka"))))
  '(gnus-group-mail-1-empty ((t (:height 1.3))))
  '(gnus-group-mail-2-empty ((t (:height 1.3))))
  '(gnus-group-mail-3-empty ((t (:height 1.3))))
