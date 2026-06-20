@@ -9,15 +9,15 @@
 (add-to-list 'initial-frame-alist '(vertical-scroll-bars . nil))
 
 ;;; global minor modes (emacs standard, no packages)
-(context-menu-mode)
+(when (fboundp 'context-menu-mode) (context-menu-mode))
 (desktop-save-mode (if window-system t -1))
 (display-battery-mode)
-(indent-tabs-mode)
+(when (fboundp 'indent-tabs-mode) (indent-tabs-mode))
 (menu-bar-mode (if (eq window-system 'ns) t -1))
 (pixel-scroll-mode (if window-system t -1))
 (savehist-mode)
-(tab-bar-mode)
-(tool-bar-mode -1)
+(when (fboundp 'tab-bar-mode) (tab-bar-mode))
+(when (fboundp 'tool-bar-mode) (tool-bar-mode -1))
 (xterm-mouse-mode (if window-system -1 t))
 
 ;;; hooks
@@ -120,7 +120,7 @@
   (eshell-modules-list
    '(eshell-alias eshell-basic eshell-cmpl eshell-dirs eshell-extpipe
                   eshell-glob eshell-hist eshell-ls eshell-pred
-                  eshell-prompt eshell-script eshell-smart eshell-term
+                  eshell-prompt eshell-script eshell-term
                   eshell-unix eshell-xtra))
   (eshell-review-quick-commands 'not-even-short-output)
   (eshell-vterm-mode t)
@@ -534,9 +534,9 @@
  '(tab-bar-tab-name-format-functions
    '((lambda (name _ idx)
        (format "%c%d %s"
-               (if (< idx 9) (char-from-name "PLACE OF INTEREST SIGN")
-                 32)
-               idx name))
+	       (if (< idx 9) (char-from-name "PLACE OF INTEREST SIGN")
+		 32)
+	       idx name))
      tab-bar-tab-name-format-close-button tab-bar-tab-name-format-face))
  '(term-suppress-hard-newline t))
 
