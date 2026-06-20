@@ -3,7 +3,10 @@
 ;;; load my libraries (ref. https://github.com/gall0ws/elisp)
 (let ((lib-dir "~/lib/elisp"))
   (when (file-exists-p lib-dir)
-    (mapc 'load (directory-files lib-dir t "\\.elc$"))))
+    (add-to-list 'load-path (expand-file-name lib-dir))
+    (require 'xtra)
+    (require 'exec)
+    (require 'em-gall0ws)))
 
 ;;; default frame settings
 (add-to-list 'initial-frame-alist '(vertical-scroll-bars . nil))
@@ -38,11 +41,6 @@
   (local-set-key (kbd "s-c") 'elisp-byte-compile-file))
 
 (defun hooks/eshell-mode ()
-  ;; I know there's `eshell-rebind' module, but I don't like it.
-  (local-set-key (kbd "C-l")   'eshell-clear-buffer)
-  (local-set-key (kbd "C-c u") 'eshell-kill-line)
-  (local-set-key (kbd "C-c z") 'eshell-job-stop)
-  (local-set-key (kbd "<deletechar>") 'eshell-interrupt-process) ; 9term style
   (company-mode -1)
   (mapc (lambda (env)
           (add-to-list 'eshell-variable-aliases-list env))
@@ -121,7 +119,7 @@
    '(eshell-alias eshell-basic eshell-cmpl eshell-dirs eshell-extpipe
                   eshell-glob eshell-hist eshell-ls eshell-pred
                   eshell-prompt eshell-script eshell-term
-                  eshell-unix eshell-xtra))
+                  eshell-unix eshell-xtra eshell-gall0ws))
   (eshell-review-quick-commands 'not-even-short-output)
   (eshell-vterm-mode t)
   (eshell-prompt-function
